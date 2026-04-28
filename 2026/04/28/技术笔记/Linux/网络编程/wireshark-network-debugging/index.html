@@ -1,0 +1,380 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux网络开发专题：Wireshark 使用指南 | 嵌入式技术栈</title><meta name="author" content="XTHBA"><meta name="copyright" content="XTHBA"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Wireshark 使用指南：抓包、过滤、分析TCP&#x2F;UDP&#x2F;HTTP流量">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux网络开发专题：Wireshark 使用指南">
+<meta property="og:url" content="https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/wireshark-network-debugging/index.html">
+<meta property="og:site_name" content="嵌入式技术栈">
+<meta property="og:description" content="Wireshark 使用指南：抓包、过滤、分析TCP&#x2F;UDP&#x2F;HTTP流量">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://xthba11.github.io/img/avatar.jpg">
+<meta property="article:published_time" content="2026-04-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-28T08:20:35.245Z">
+<meta property="article:author" content="XTHBA">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="网络编程">
+<meta property="article:tag" content="Wireshark">
+<meta property="article:tag" content="tcpdump">
+<meta property="article:tag" content="网络调试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xthba11.github.io/img/avatar.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Linux网络开发专题：Wireshark 使用指南",
+  "url": "https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/wireshark-network-debugging/",
+  "image": "https://xthba11.github.io/img/avatar.jpg",
+  "datePublished": "2026-04-27T16:00:00.000Z",
+  "dateModified": "2026-04-28T08:20:35.245Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "XTHBA",
+      "url": "https://xthba11.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/wireshark-network-debugging/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux网络开发专题：Wireshark 使用指南',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="嵌入式技术栈" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-book"></i><span> 笔记</span></a></div><div class="menus_item"><a class="site-page" href="/projects/"><i class="fa-fw fas fa-project-diagram"></i><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">嵌入式技术栈</span></a><a class="nav-page-title" href="/"><span class="site-name">Linux网络开发专题：Wireshark 使用指南</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-book"></i><span> 笔记</span></a></div><div class="menus_item"><a class="site-page" href="/projects/"><i class="fa-fw fas fa-project-diagram"></i><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Linux网络开发专题：Wireshark 使用指南</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-04-28T08:20:35.245Z" title="更新于 2026-04-28 16:20:35">2026-04-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/">技术笔记</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/">Linux</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E7%BD%91%E7%BB%9C%E8%B0%83%E8%AF%95/">网络调试</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="Linux-网络开发专题：Wireshark-使用指南"><a href="#Linux-网络开发专题：Wireshark-使用指南" class="headerlink" title="Linux 网络开发专题：Wireshark 使用指南"></a>Linux 网络开发专题：Wireshark 使用指南</h1><h2 id="1-安装与启动"><a href="#1-安装与启动" class="headerlink" title="1. 安装与启动"></a>1. 安装与启动</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Ubuntu / Debian</span></span><br><span class="line"><span class="built_in">sudo</span> apt install wireshark</span><br><span class="line"></span><br><span class="line"><span class="comment"># CentOS / RHEL</span></span><br><span class="line"><span class="built_in">sudo</span> yum install wireshark</span><br><span class="line"></span><br><span class="line"><span class="comment"># 启动（需要 root 权限）</span></span><br><span class="line"><span class="built_in">sudo</span> wireshark &amp;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-常用抓包命令"><a href="#2-常用抓包命令" class="headerlink" title="2. 常用抓包命令"></a>2. 常用抓包命令</h2><h3 id="抓取所有流量"><a href="#抓取所有流量" class="headerlink" title="抓取所有流量"></a>抓取所有流量</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 -w capture.pcap</span><br></pre></td></tr></table></figure>
+
+<h3 id="抓取特定端口"><a href="#抓取特定端口" class="headerlink" title="抓取特定端口"></a>抓取特定端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 抓取 80 端口 HTTP 流量</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 port 80 -w http.pcap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 抓取 8080 端口</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 port 8080 -w app.pcap</span><br></pre></td></tr></table></figure>
+
+<h3 id="抓取特定-IP"><a href="#抓取特定-IP" class="headerlink" title="抓取特定 IP"></a>抓取特定 IP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 抓取与 192.168.1.100 通信的包</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 host 192.168.1.100 -w target.pcap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 抓取源或目标为指定 IP</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 src 192.168.1.100</span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 dst 192.168.1.100</span><br></pre></td></tr></table></figure>
+
+<h3 id="抓取-TCP-UDP"><a href="#抓取-TCP-UDP" class="headerlink" title="抓取 TCP&#x2F;UDP"></a>抓取 TCP&#x2F;UDP</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># TCP</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 tcp -w tcp.pcap</span><br><span class="line"></span><br><span class="line"><span class="comment"># UDP</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 udp -w udp.pcap</span><br><span class="line"></span><br><span class="line"><span class="comment"># 组合条件</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 <span class="string">&#x27;tcp port 80 or udp port 53&#x27;</span> -w net.pcap</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-Wireshark-过滤语法"><a href="#3-Wireshark-过滤语法" class="headerlink" title="3. Wireshark 过滤语法"></a>3. Wireshark 过滤语法</h2><h3 id="捕获过滤器（抓包前）"><a href="#捕获过滤器（抓包前）" class="headerlink" title="捕获过滤器（抓包前）"></a>捕获过滤器（抓包前）</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 语法：proto [expr:size]</span></span><br><span class="line">tcp port 8080</span><br><span class="line">host 192.168.1.100</span><br><span class="line">net 192.168.1.0/24</span><br></pre></td></tr></table></figure>
+
+<h3 id="显示过滤器（抓包后）"><a href="#显示过滤器（抓包后）" class="headerlink" title="显示过滤器（抓包后）"></a>显示过滤器（抓包后）</h3><h4 id="按协议过滤"><a href="#按协议过滤" class="headerlink" title="按协议过滤"></a>按协议过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">tcp</span><br><span class="line">udp</span><br><span class="line">icmp</span><br><span class="line">http</span><br><span class="line">dns</span><br></pre></td></tr></table></figure>
+
+<h4 id="按-IP-过滤"><a href="#按-IP-过滤" class="headerlink" title="按 IP 过滤"></a>按 IP 过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ip.addr == 192.168.1.100</span><br><span class="line">ip.src == 192.168.1.100</span><br><span class="line">ip.dst == 192.168.1.100</span><br></pre></td></tr></table></figure>
+
+<h4 id="按端口过滤"><a href="#按端口过滤" class="headerlink" title="按端口过滤"></a>按端口过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tcp.port == 8080</span><br><span class="line">tcp.srcport == 80</span><br><span class="line">udp.port == 53</span><br></pre></td></tr></table></figure>
+
+<h4 id="组合条件"><a href="#组合条件" class="headerlink" title="组合条件"></a>组合条件</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># AND</span><br><span class="line">ip.addr == 192.168.1.100 and tcp.port == 8080</span><br><span class="line"></span><br><span class="line"># OR</span><br><span class="line">http or dns</span><br><span class="line"></span><br><span class="line"># NOT</span><br><span class="line">!(tcp.port == 80)</span><br></pre></td></tr></table></figure>
+
+<h4 id="按包内容过滤"><a href="#按包内容过滤" class="headerlink" title="按包内容过滤"></a>按包内容过滤</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tcp contains &quot;GET&quot;        # TCP载荷包含 GET</span><br><span class="line">http.request.uri contains &quot;login&quot;  # HTTP请求URI包含login</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-常见协议分析"><a href="#4-常见协议分析" class="headerlink" title="4. 常见协议分析"></a>4. 常见协议分析</h2><h3 id="TCP-三次握手"><a href="#TCP-三次握手" class="headerlink" title="TCP 三次握手"></a>TCP 三次握手</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Frame 1: SYN                    192.168.1.10 -&gt; 192.168.1.100</span><br><span class="line">Frame 2: SYN-ACK               192.168.1.100 -&gt; 192.168.1.10</span><br><span class="line">Frame 3: ACK                    192.168.1.10 -&gt; 192.168.1.100</span><br></pre></td></tr></table></figure>
+
+<h3 id="TCP-四次挥手"><a href="#TCP-四次挥手" class="headerlink" title="TCP 四次挥手"></a>TCP 四次挥手</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Frame N: FIN, ACK               -&gt; 关闭连接</span><br><span class="line">Frame N+1: ACK                  &lt;- 确认关闭</span><br><span class="line">Frame N+2: FIN, ACK             &lt;- 关闭连接</span><br><span class="line">Frame N+3: ACK                  -&gt; 确认关闭</span><br></pre></td></tr></table></figure>
+
+<h3 id="HTTP-请求-响应"><a href="#HTTP-请求-响应" class="headerlink" title="HTTP 请求&#x2F;响应"></a>HTTP 请求&#x2F;响应</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># HTTP 请求</span><br><span class="line">Hypertext Transfer Protocol</span><br><span class="line">    GET /index.html HTTP/1.1\r\n</span><br><span class="line">    Host: example.com\r\n</span><br><span class="line">    User-Agent: curl/7.68.0\r\n</span><br><span class="line"></span><br><span class="line"># HTTP 响应</span><br><span class="line">Hypertext Transfer Protocol</span><br><span class="line">    HTTP/1.1 200 OK\r\n</span><br><span class="line">    Content-Type: text/html\r\n</span><br><span class="line">    Content-Length: 612\r\n</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-常见问题分析"><a href="#5-常见问题分析" class="headerlink" title="5. 常见问题分析"></a>5. 常见问题分析</h2><h3 id="问题-1：连接重置（RST）"><a href="#问题-1：连接重置（RST）" class="headerlink" title="问题 1：连接重置（RST）"></a>问题 1：连接重置（RST）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Flags: 0x14 (RST, ACK)</span><br></pre></td></tr></table></figure>
+
+<p><strong>原因</strong>：</p>
+<ul>
+<li>服务端端口未监听</li>
+<li>防火墙拦截</li>
+<li>连接超时</li>
+</ul>
+<h3 id="问题-2：大量重传（Retransmission）"><a href="#问题-2：大量重传（Retransmission）" class="headerlink" title="问题 2：大量重传（Retransmission）"></a>问题 2：大量重传（Retransmission）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TCP Retransmission</span><br></pre></td></tr></table></figure>
+
+<p><strong>原因</strong>：</p>
+<ul>
+<li>网络拥塞</li>
+<li>丢包</li>
+<li>对方接收缓冲区满</li>
+</ul>
+<h3 id="问题-3：TCP-窗口为-0"><a href="#问题-3：TCP-窗口为-0" class="headerlink" title="问题 3：TCP 窗口为 0"></a>问题 3：TCP 窗口为 0</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[TCP ZeroWindow]</span><br></pre></td></tr></table></figure>
+
+<p><strong>原因</strong>：接收方处理速度跟不上，需要流量控制。</p>
+<h3 id="问题-4：抓包发现延迟"><a href="#问题-4：抓包发现延迟" class="headerlink" title="问题 4：抓包发现延迟"></a>问题 4：抓包发现延迟</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Time: 1.234567</span><br></pre></td></tr></table></figure>
+
+<p><strong>分析</strong>：</p>
+<ol>
+<li>对比 <code>Time</code> 列</li>
+<li>看 SEQ&#x2F;ACK 差值</li>
+<li>定位哪个环节慢</li>
+</ol>
+<hr>
+<h2 id="6-实用技巧"><a href="#6-实用技巧" class="headerlink" title="6. 实用技巧"></a>6. 实用技巧</h2><h3 id="导出特定包"><a href="#导出特定包" class="headerlink" title="导出特定包"></a>导出特定包</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 导出 HTTP 对象</span><br><span class="line">File -&gt; Export Objects -&gt; HTTP</span><br></pre></td></tr></table></figure>
+
+<h3 id="追踪-TCP-流"><a href="#追踪-TCP-流" class="headerlink" title="追踪 TCP 流"></a>追踪 TCP 流</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">右键 -&gt; Follow -&gt; TCP Stream</span><br></pre></td></tr></table></figure>
+
+<h3 id="专家信息"><a href="#专家信息" class="headerlink" title="专家信息"></a>专家信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Analyze -&gt; Expert Information</span><br><span class="line">查看警告和错误</span><br></pre></td></tr></table></figure>
+
+<h3 id="统计信息"><a href="#统计信息" class="headerlink" title="统计信息"></a>统计信息</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Statistics -&gt; Summary</span><br><span class="line">Statistics -&gt; Conversations</span><br><span class="line">Statistics -&gt; Protocol Hierarchy</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-tcpdump-常用参数"><a href="#7-tcpdump-常用参数" class="headerlink" title="7. tcpdump 常用参数"></a>7. tcpdump 常用参数</h2><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-i</code></td>
+<td>指定网卡</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>不解析域名</td>
+</tr>
+<tr>
+<td><code>-nn</code></td>
+<td>不解析协议和端口</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>详细输出</td>
+</tr>
+<tr>
+<td><code>-c</code></td>
+<td>抓取指定数量包</td>
+</tr>
+<tr>
+<td><code>-s</code></td>
+<td>指定抓取长度</td>
+</tr>
+<tr>
+<td><code>-w</code></td>
+<td>输出到文件</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>读取文件</td>
+</tr>
+</tbody></table>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 实战例子：抓取 HTTP 请求和响应</span></span><br><span class="line"><span class="built_in">sudo</span> tcpdump -i eth0 -nn -v <span class="string">&#x27;tcp port 80 and (tcp[((tcp[12:1] &amp; 0xf0) &gt;&gt; 2):4] = 0x47455420 or tcp[((tcp[12:1] &amp; 0xf0) &gt;&gt; 2):4] = 0x48545450)&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>命令&#x2F;过滤器</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>抓包保存</td>
+<td><code>tcpdump -i eth0 -w file.pcap</code></td>
+</tr>
+<tr>
+<td>HTTP 分析</td>
+<td><code>ip.addr == x.x.x.x and http</code></td>
+</tr>
+<tr>
+<td>TCP 连接</td>
+<td><code>tcp.flags.syn == 1</code></td>
+</tr>
+<tr>
+<td>错误分析</td>
+<td><code>tcp.analysis.retransmission</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>调试原则</strong>：先用 tcpdump 粗略抓包，确认问题方向，再用 Wireshark 精细分析。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://xthba11.github.io">XTHBA</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/wireshark-network-debugging/">https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/wireshark-network-debugging/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://xthba11.github.io" target="_blank">嵌入式技术栈</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">网络编程</a><a class="post-meta__tags" href="/tags/Wireshark/">Wireshark</a><a class="post-meta__tags" href="/tags/tcpdump/">tcpdump</a><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E8%B0%83%E8%AF%95/">网络调试</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/linux-network-common-pitfalls/" title="Linux网络开发专题：常见踩坑与解决方案"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Linux网络开发专题：常见踩坑与解决方案</div></div><div class="info-2"><div class="info-item-1">Linux 网络开发专题：常见踩坑与解决方案坑 1：字节序问题问题描述不同平台的字节序不同（大端&#x2F;小端），网络协议统一用大端序（网络字节序）。 123// 错误示例uint32_t ip = 0xC0A80101;  // 192.168.1.1write(sockfd, &amp;ip, sizeof(ip));  // 不同平台解析不同！  解决方案1234567891011121314151617#include &lt;arpa/inet.h&gt;// 正确做法：使用 inet_pton / inet_ntopstruct sockaddr_in addr;inet_pton(AF_INET, &quot;192.168.1.1&quot;, &amp;addr.sin_addr);  // 字符串转二进制// 或addr.sin_addr.s_addr = htonl(INADDR_ANY);  // 本机序转网络序// 读取时反向转换char buf[INET_ADDRSTRLEN];inet_ntop(AF_INET, &amp;addr.sin_add...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/linux-network-common-pitfalls/" title="Linux网络开发专题：常见踩坑与解决方案"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-28</div><div class="info-item-2">Linux网络开发专题：常见踩坑与解决方案</div></div><div class="info-2"><div class="info-item-1">Linux 网络开发专题：常见踩坑与解决方案坑 1：字节序问题问题描述不同平台的字节序不同（大端&#x2F;小端），网络协议统一用大端序（网络字节序）。 123// 错误示例uint32_t ip = 0xC0A80101;  // 192.168.1.1write(sockfd, &amp;ip, sizeof(ip));  // 不同平台解析不同！  解决方案1234567891011121314151617#include &lt;arpa/inet.h&gt;// 正确做法：使用 inet_pton / inet_ntopstruct sockaddr_in addr;inet_pton(AF_INET, &quot;192.168.1.1&quot;, &amp;addr.sin_addr);  // 字符串转二进制// 或addr.sin_addr.s_addr = htonl(INADDR_ANY);  // 本机序转网络序// 读取时反向转换char buf[INET_ADDRSTRLEN];inet_ntop(AF_INET, &amp;addr.sin_add...</div></div></div></a><a class="pagination-related" href="/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/linux-network-common-algorithms/" title="Linux网络开发专题：常见算法（图算法、滑动窗口、拥塞控制）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-28</div><div class="info-item-2">Linux网络开发专题：常见算法（图算法、滑动窗口、拥塞控制）</div></div><div class="info-2"><div class="info-item-1">Linux 网络开发专题：常用算法1. 最短路径算法 — Dijkstra123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657#include &lt;stdlib.h&gt;#include &lt;limits.h&gt;#define INF INT_MAX#define MAX_NODES 6// 邻接矩阵int graph[MAX_NODES][MAX_NODES] = &#123;    &#123;0,   4,   INF, INF, INF, INF&#125;,    &#123;4,   0,   6,   INF, INF, INF&#125;,    &#123;INF, 6,   0,   2,   INF, INF&#125;,    &#123;INF, INF, 2,   0,   3,   INF&#125;,    &#123;INF, INF, INF, 3,   0,   5&#12...</div></div></div></a><a class="pagination-related" href="/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/linux-network-core-data-structures/" title="Linux网络开发专题：核心数据结构（图、内存池、RingBuffer）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-04-28</div><div class="info-item-2">Linux网络开发专题：核心数据结构（图、内存池、RingBuffer）</div></div><div class="info-2"><div class="info-item-1">Linux 网络开发专题：核心数据结构网络协议栈开发中，最核心的三种数据结构。 1. 图（Graph）— 路由与拓扑邻接表实现123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;#include &lt;string.h&gt;#define MAX_NODES 256// 邻接表节点struct adj_node &#123;    int dest;               // 目标节点    int weight;             // 权重（如跳数、延迟）    struct adj_node *next;&#125;;// 图结构struct graph &#123;    struct adj_node *head[MAX_NODES];    int num_nodes;&#125;;// 添加边void add_edge(...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">XTHBA</div><div class="author-info-description">C语言 | Linux内核 | MCU开发</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">15</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xthba11"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/xthba11" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:112301306@fzu.edu.cn" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的技术博客，记录嵌入式的点点滴滴</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux-%E7%BD%91%E7%BB%9C%E5%BC%80%E5%8F%91%E4%B8%93%E9%A2%98%EF%BC%9AWireshark-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"><span class="toc-number">1.</span> <span class="toc-text">Linux 网络开发专题：Wireshark 使用指南</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85%E4%B8%8E%E5%90%AF%E5%8A%A8"><span class="toc-number">1.1.</span> <span class="toc-text">1. 安装与启动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%B8%B8%E7%94%A8%E6%8A%93%E5%8C%85%E5%91%BD%E4%BB%A4"><span class="toc-number">1.2.</span> <span class="toc-text">2. 常用抓包命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E6%89%80%E6%9C%89%E6%B5%81%E9%87%8F"><span class="toc-number">1.2.1.</span> <span class="toc-text">抓取所有流量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E7%89%B9%E5%AE%9A%E7%AB%AF%E5%8F%A3"><span class="toc-number">1.2.2.</span> <span class="toc-text">抓取特定端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8F%96%E7%89%B9%E5%AE%9A-IP"><span class="toc-number">1.2.3.</span> <span class="toc-text">抓取特定 IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%93%E5%8F%96-TCP-UDP"><span class="toc-number">1.2.4.</span> <span class="toc-text">抓取 TCP&#x2F;UDP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Wireshark-%E8%BF%87%E6%BB%A4%E8%AF%AD%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">3. Wireshark 过滤语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8D%95%E8%8E%B7%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88%E6%8A%93%E5%8C%85%E5%89%8D%EF%BC%89"><span class="toc-number">1.3.1.</span> <span class="toc-text">捕获过滤器（抓包前）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E8%BF%87%E6%BB%A4%E5%99%A8%EF%BC%88%E6%8A%93%E5%8C%85%E5%90%8E%EF%BC%89"><span class="toc-number">1.3.2.</span> <span class="toc-text">显示过滤器（抓包后）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E5%8D%8F%E8%AE%AE%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">按协议过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89-IP-%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">按 IP 过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E7%AB%AF%E5%8F%A3%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">按端口过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%84%E5%90%88%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">组合条件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E5%8C%85%E5%86%85%E5%AE%B9%E8%BF%87%E6%BB%A4"><span class="toc-number">1.3.2.5.</span> <span class="toc-text">按包内容过滤</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E5%B8%B8%E8%A7%81%E5%8D%8F%E8%AE%AE%E5%88%86%E6%9E%90"><span class="toc-number">1.4.</span> <span class="toc-text">4. 常见协议分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B"><span class="toc-number">1.4.1.</span> <span class="toc-text">TCP 三次握手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B"><span class="toc-number">1.4.2.</span> <span class="toc-text">TCP 四次挥手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-%E8%AF%B7%E6%B1%82-%E5%93%8D%E5%BA%94"><span class="toc-number">1.4.3.</span> <span class="toc-text">HTTP 请求&#x2F;响应</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-number">1.5.</span> <span class="toc-text">5. 常见问题分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-1%EF%BC%9A%E8%BF%9E%E6%8E%A5%E9%87%8D%E7%BD%AE%EF%BC%88RST%EF%BC%89"><span class="toc-number">1.5.1.</span> <span class="toc-text">问题 1：连接重置（RST）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-2%EF%BC%9A%E5%A4%A7%E9%87%8F%E9%87%8D%E4%BC%A0%EF%BC%88Retransmission%EF%BC%89"><span class="toc-number">1.5.2.</span> <span class="toc-text">问题 2：大量重传（Retransmission）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-3%EF%BC%9ATCP-%E7%AA%97%E5%8F%A3%E4%B8%BA-0"><span class="toc-number">1.5.3.</span> <span class="toc-text">问题 3：TCP 窗口为 0</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-4%EF%BC%9A%E6%8A%93%E5%8C%85%E5%8F%91%E7%8E%B0%E5%BB%B6%E8%BF%9F"><span class="toc-number">1.5.4.</span> <span class="toc-text">问题 4：抓包发现延迟</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E5%AE%9E%E7%94%A8%E6%8A%80%E5%B7%A7"><span class="toc-number">1.6.</span> <span class="toc-text">6. 实用技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%87%BA%E7%89%B9%E5%AE%9A%E5%8C%85"><span class="toc-number">1.6.1.</span> <span class="toc-text">导出特定包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%BD%E8%B8%AA-TCP-%E6%B5%81"><span class="toc-number">1.6.2.</span> <span class="toc-text">追踪 TCP 流</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%93%E5%AE%B6%E4%BF%A1%E6%81%AF"><span class="toc-number">1.6.3.</span> <span class="toc-text">专家信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E4%BF%A1%E6%81%AF"><span class="toc-number">1.6.4.</span> <span class="toc-text">统计信息</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-tcpdump-%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0"><span class="toc-number">1.7.</span> <span class="toc-text">7. tcpdump 常用参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">1.8.</span> <span class="toc-text">总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/linux-network-core-data-structures/" title="Linux网络开发专题：核心数据结构（图、内存池、RingBuffer）">Linux网络开发专题：核心数据结构（图、内存池、RingBuffer）</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/linux-network-common-algorithms/" title="Linux网络开发专题：常见算法（图算法、滑动窗口、拥塞控制）">Linux网络开发专题：常见算法（图算法、滑动窗口、拥塞控制）</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/linux-network-common-pitfalls/" title="Linux网络开发专题：常见踩坑与解决方案">Linux网络开发专题：常见踩坑与解决方案</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/wireshark-network-debugging/" title="Linux网络开发专题：Wireshark 使用指南">Linux网络开发专题：Wireshark 使用指南</a><time datetime="2026-04-27T16:00:00.000Z" title="发表于 2026-04-28 00:00:00">2026-04-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/27/hello-world/" title="Hello World">Hello World</a><time datetime="2026-04-26T16:00:00.000Z" title="发表于 2026-04-27 00:00:00">2026-04-27</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By XTHBA</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'xthba11/xthba11.github.io',
+      'data-repo-id': 'R_kgDOSOB6gg',
+      'data-category-id': 'DIC_kwDOSOB6gs4C72aL',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
