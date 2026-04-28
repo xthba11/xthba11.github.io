@@ -2,6 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU%E5%BC%80%E5%8F%91/mcu-bluetooth-development/</loc>
+    
+    <lastmod>2026-04-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU%E5%BC%80%E5%8F%91/mcu-motor-development/</loc>
+    
+    <lastmod>2026-04-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU%E5%BC%80%E5%8F%91/mcu-debugging-guide/</loc>
+    
+    <lastmod>2026-04-28</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://xthba11.github.io/2026/04/28/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/wireshark-network-debugging/</loc>
     
     <lastmod>2026-04-28</lastmod>
@@ -196,6 +223,90 @@
     <priority>0.2</priority>
   </url>
   
+  <url>
+    <loc>https://xthba11.github.io/tags/MCU/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/STM32/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/%E8%B0%83%E8%AF%95/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/J-Link/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/SWD/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/%E8%93%9D%E7%89%99/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/BLE/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/HC-05/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/BLE5-0/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/%E7%94%B5%E6%9C%BA/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/PWM/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/tags/PID/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 
   
   <url>
@@ -242,6 +353,41 @@
   
   <url>
     <loc>https://xthba11.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/Linux/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/%E5%B8%B8%E8%A7%81%E5%9D%91/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E5%B5%8C%E5%85%A5%E5%BC%8F/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU%E5%BC%80%E5%8F%91/%E8%B0%83%E8%AF%95%E6%8A%80%E6%9C%AF/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU%E5%BC%80%E5%8F%91/%E8%93%9D%E7%89%99%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2026-04-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://xthba11.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AC%94%E8%AE%B0/%E5%B5%8C%E5%85%A5%E5%BC%8F/MCU%E5%BC%80%E5%8F%91/%E7%94%B5%E6%9C%BA%E5%BC%80%E5%8F%91/</loc>
     <lastmod>2026-04-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
