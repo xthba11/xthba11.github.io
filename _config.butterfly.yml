@@ -231,9 +231,10 @@ comments:
 # Giscus
 giscus:
   repo: xthba11/xthba11.github.io
-  repo_id: R_kgDOOOPx7w
-  category_id: DIC_kwDOOOPx784Cn4Ts
-  theme: light
+  repo_id: R_kgDOSOB6gg
+  category: Announcements
+  category_id: DIC_kwDOSOB6gs4C72Lw
+  theme: dark
   dark_theme: dark
   mapping: pathname
   rel:

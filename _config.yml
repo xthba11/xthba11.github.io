@@ -103,7 +103,7 @@ deploy:
   type: git
   repo: https://github.com/xthba11/xthba11.github.io.git
   branch: gh-pages
-
+  git: "C:\\Program Files\\Git\\cmd\\git.exe"
 # Search
 search:
   path: search.json

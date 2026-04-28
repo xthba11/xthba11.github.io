@@ -7,3 +7,11 @@ public/
 .deploy*/
 .cache/
 package-lock.json
+.obsidian/
+.svale/
+.DocumentRevisions-V100/
+.fseventsd/
+.Spotlight-V100/
+.TemporaryItems/
+.Trashes/
+.apdisk/
