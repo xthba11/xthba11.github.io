@@ -18,7 +18,8 @@
       "Bash(git push *)",
       "Bash(gh --version)",
       "Bash(hexo g *)",
-      "WebFetch(domain:minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com)"
+      "WebFetch(domain:minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com)",
+      "Bash(git commit *)"
     ]
   }
 }
