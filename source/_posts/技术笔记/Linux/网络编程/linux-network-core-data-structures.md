@@ -13,6 +13,10 @@ tags:
   - 内存池
   - RingBuffer
 description: 深入理解网络协议栈中最常用的三种数据结构：图结构、内存池和环形缓冲区
+top_img: https://source.unsplash.com/1600x900/?algorithm,code
+---
+
+## 1. 图（Graph）— 路由与拓扑
 ---
 
 # Linux 网络开发专题：核心数据结构

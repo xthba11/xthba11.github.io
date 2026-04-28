@@ -12,7 +12,10 @@ tags:
   - 踩坑
   - socket
 description: 网络编程中常见的坑及其解决方案：字节序、socket选项、粘包、断线重连
+top_img: https://source.unsplash.com/1600x900/?error,debug
 ---
+
+## 坑 1：字节序问题
 
 # Linux 网络开发专题：常见踩坑与解决方案
 

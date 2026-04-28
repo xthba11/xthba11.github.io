@@ -10,7 +10,7 @@ nav:
   logo:
   display_title: true
   display_post_title: true
-  fixed: false
+  fixed: true
 
 menu:
   首页: / || fas fa-home
@@ -27,13 +27,13 @@ social:
 # Code Blocks Settings
 # --------------------------------------
 code_blocks:
-  theme: light
-  macStyle: false
+  theme: darker
+  macStyle: true
   height_limit: 500
-  word_wrap: false
+  word_wrap: true
   copy: true
   language: true
-  shrink: false
+  shrink: true
   fullpage: false
 
 # --------------------------------------
@@ -43,19 +43,19 @@ favicon: /img/favicon.png
 
 avatar:
   img: /img/avatar.jpg
-  effect: false
+  effect: true
 
 disable_top_img: false
-default_top_img:
-index_img:
-archive_img:
-tag_img:
+default_top_img: https://source.unsplash.com/1600x900/?technology,coding
+index_img: https://source.unsplash.com/1600x900/?technology,coding
+archive_img: https://source.unsplash.com/1600x900/?nature
+tag_img: https://source.unsplash.com/1600x900/?code
 tag_per_img:
-category_img:
+category_img: https://source.unsplash.com/1600x900/?computer
 category_per_img:
 footer_img: false
 
-background:
+background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
 
 cover:
   index_enable: true
@@ -90,13 +90,13 @@ post_meta:
     tags: true
     label: true
 
-index_site_info_top:
-index_top_img_height:
+index_site_info_top: 300px
+index_top_img_height: 500px
 
 subtitle:
   enable: false
 
-index_layout: 3
+index_layout: 1
 
 index_post_content:
   method: 3
@@ -260,8 +260,8 @@ darkmode:
 # Theme color
 theme_color:
   enable: true
-  main: '#49b1f5'
-  dark_main: '#1a1a1a'
+  main: '#2196f3'
+  dark_main: '#0d47a1'
 
 # UIUX
 post_loading:
