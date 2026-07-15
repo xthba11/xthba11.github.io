@@ -1,41 +1,78 @@
 ---
-title: Hello World
+title: 博客导览：从嵌入式到 Linux 网络开发
 date: 2026-04-27 00:00:00
 categories:
   - 技术笔记
 tags:
-  - Hexo
-  - Butterfly
-description: 欢迎来到我的技术博客，这是第一篇文章。
+  - 嵌入式
+  - Linux
+  - 网络编程
+description: 这个博客的内容地图：MCU、RTOS、Linux驱动、C语言网络编程和调试工具。
+top_img: /img/embedded-lab-hero.png
 ---
 
-# Hello World
+欢迎来到我的技术博客。这里会记录我在嵌入式开发、Linux 系统编程、C 语言网络编程中的实践笔记。
 
-欢迎来到我的技术博客！
+我希望这个站点不只是“代码片段仓库”，而是能把一个问题从背景、设计取舍、实现细节、调试方法一路讲清楚。
 
-## 关于这个博客
+## 内容主线
 
-这是一个使用 Hexo + Butterfly 主题搭建的静态博客，用于记录：
+### MCU 与外设开发
 
-- 嵌入式 MCU 开发经验
-- Linux 内核与驱动编程
-- C 语言网络编程
+这一部分关注从硬件到固件的完整链路：
 
-## 技术栈
+- GPIO、UART、I2C、SPI、CAN、PWM、ADC、DMA 等常见外设
+- STM32 工程结构、启动文件、链接脚本、时钟树、Bootloader
+- 传感器、电机、蓝牙模块、显示屏等实际模块调试
+- J-Link、ST-Link、SWD、串口日志和逻辑分析仪的使用方法
 
-```c
-#include <stdio.h>
+### RTOS 与实时系统
 
-int main() {
-    printf("Hello, World!\n");
-    return 0;
-}
-```
+RTOS 不是简单地把逻辑拆成几个任务，而是要考虑实时性、资源竞争和故障恢复：
 
-## 开始使用
+- FreeRTOS 任务划分、优先级设计、消息队列、事件组
+- 中断与任务协作
+- 栈溢出、死锁、优先级反转等常见问题
+- 看门狗、异常日志、掉电保护等工程化机制
 
-博客使用 Markdown 编写文章，支持代码高亮、LaTeX 公式等功能。
+### Linux 驱动与系统编程
 
----
+Linux 方向会从用户态到内核态逐步展开：
 
-**Happy Coding!**
+- 字符设备、platform driver、设备树、GPIO/I2C/SPI 子系统
+- procfs、sysfs、ioctl、poll/select/epoll
+- Makefile、交叉编译、GDB、perf、ftrace
+- 驱动调试、内核日志、崩溃定位
+
+### C 语言网络编程
+
+网络专题偏向工程实践：
+
+- TCP/UDP socket 编程
+- epoll 高并发服务模型
+- 粘包/半包、心跳、重连、超时管理
+- Wireshark、tcpdump 抓包分析
+- 协议栈中常见的数据结构和算法
+
+## 推荐阅读路径
+
+如果你刚进入嵌入式方向，可以按下面顺序阅读：
+
+1. MCU 调试技术详解
+2. STM32 工程结构设计
+3. FreeRTOS 任务划分与通信
+4. Linux 字符设备驱动入门
+5. C 语言 epoll 服务端实践
+6. Wireshark 抓包分析指南
+
+## 我会怎样写文章
+
+每篇文章尽量包含这些部分：
+
+- 问题背景：为什么要学这个，实际项目里哪里会用到
+- 设计思路：关键模块怎么拆，接口怎么定
+- 代码实现：给出能落地的核心代码
+- 调试方法：如何验证、如何定位问题
+- 常见坑：真实开发中容易踩的地方
+
+嵌入式开发很迷人的地方在于，它把软件、硬件、时序、协议和工程经验揉在一起。希望这些笔记能成为一张清晰的路线图。

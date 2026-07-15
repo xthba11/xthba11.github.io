@@ -6,7 +6,6 @@ node_modules/
 public/
 .deploy*/
 .cache/
-package-lock.json
 .obsidian/
 .svale/
 .DocumentRevisions-V100/

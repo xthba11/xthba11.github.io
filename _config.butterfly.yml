@@ -46,16 +46,16 @@ avatar:
   effect: true
 
 disable_top_img: false
-default_top_img: https://source.unsplash.com/1600x900/?technology,coding
-index_img: https://source.unsplash.com/1600x900/?technology,coding
-archive_img: https://source.unsplash.com/1600x900/?nature
-tag_img: https://source.unsplash.com/1600x900/?code
+default_top_img: /img/embedded-lab-hero.png
+index_img: /img/embedded-lab-hero.png
+archive_img: /img/embedded-lab-hero.png
+tag_img: /img/embedded-lab-hero.png
 tag_per_img:
-category_img: https://source.unsplash.com/1600x900/?computer
+category_img: /img/embedded-lab-hero.png
 category_per_img:
 footer_img: false
 
-background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+background: '#f4f7f8'
 
 cover:
   index_enable: true
@@ -94,13 +94,17 @@ index_site_info_top: 300px
 index_top_img_height: 500px
 
 subtitle:
-  enable: false
+  enable: true
+  effect: false
+  source: false
+  sub:
+    - C语言 | Linux内核 | MCU开发 | 网络编程
 
 index_layout: 1
 
 index_post_content:
   method: 3
-  length: 500
+  length: 180
 
 toc:
   post: true
@@ -288,3 +292,9 @@ index_img_loading:
 
 # No more things
 no_google_adsense: true
+
+# Inject
+inject:
+  head:
+    - <link rel="stylesheet" href="/css/embedded-lab.css">
+  bottom:

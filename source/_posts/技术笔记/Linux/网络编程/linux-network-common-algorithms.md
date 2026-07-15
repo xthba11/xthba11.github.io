@@ -13,10 +13,7 @@ tags:
   - TCP
   - 滑动窗口
 description: 网络编程中常用的算法：最短路径、滑动窗口、拥塞控制算法
-top_img: https://source.unsplash.com/1600x900/?network,technology
----
-
-## 1. 最短路径算法 — Dijkstra
+top_img: /img/embedded-lab-hero.png
 ---
 
 # Linux 网络开发专题：常用算法
