@@ -204,7 +204,7 @@ aside:
     limit: 8
     sort_order:
   card_webinfo:
-    enable: true
+    enable: false
     post_count: true
 
 # --------------------------------------

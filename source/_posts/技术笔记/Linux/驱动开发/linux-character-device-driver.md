@@ -17,7 +17,94 @@ top_img: /img/embedded-lab-hero.png
 
 字符设备驱动是 Linux 驱动开发最适合入门的切入点。它能覆盖设备号、文件操作接口、内核态和用户态交互等核心概念。
 
-本文以一个简单的 `demo_chrdev` 为例，建立最小闭环。
+本文以一个简单的 `demo_chrdev` 为例，建立最小闭环。这个实验不是单纯为了写一个 hello driver，而是给后面的 RK3568 车载网关项目做准备：网关主程序运行在用户态，但板端可能会接入按键、蜂鸣器、状态灯、外部告警输入或者自定义硬件状态节点，这些硬件最终都需要通过驱动暴露给用户态程序。
+
+## 测试环境
+
+- 主机系统：Ubuntu 22.04 LTS，x86_64，用于编译和初步验证内核模块代码。
+- 目标板/芯片：RK3568 Linux 开发板，车载网关与车道偏离预警实验平台。
+- 内核/SDK/编译器版本：RK3568 厂商 Linux SDK，内核版本以板端 `uname -r` 为准；交叉编译器使用 SDK 内置 `aarch64-linux-gnu-gcc` 或板端原生 `gcc`。
+- 使用工具：`make`、`insmod`、`rmmod`、`dmesg`、`lsmod`、`mknod`、`strace`、`gdb`。
+- 关联项目：RK3568 车载 CAN 网关与轻量级车道偏离预警系统，用户态包含 SocketCAN、OpenCV、SQLite 和 Qt Dashboard。
+
+板端确认命令：
+
+```bash
+uname -a
+cat /proc/version
+gcc --version
+ls /lib/modules/$(uname -r)/build
+```
+
+如果 `/lib/modules/$(uname -r)/build` 不存在，说明板端没有准备内核头文件，建议在 Ubuntu 主机上使用 RK3568 SDK 里的内核源码交叉编译模块。
+
+## 问题背景
+
+RK3568 车载网关主程序主要运行在用户态：`vehicle_gateway` 负责 SocketCAN 接收和 CAN 报文解析，OpenCV 线程负责车道线检测，Qt Dashboard 负责显示车辆状态和告警。用户态程序已经能完成大部分业务，但项目想继续往“真实车载终端”靠近，就会遇到几个内核到用户态的接口需求：
+
+- 通过 GPIO 按键触发告警确认、界面切换或者日志打点。
+- 控制蜂鸣器、状态灯、继电器等简单外设。
+- 暴露一个调试节点，方便用户态读取驱动内部状态。
+- 后续接入 MCP2515 SPI-CAN、外部中断输入时，先理解字符设备的基本闭环。
+
+所以这篇文章的目标是先做一个最小字符设备：用户态可以 `open()`、`write()`、`read()` 和 `ioctl()`，内核态能收到数据、保存状态并把状态返回给应用层。
+
+## 验证方法
+
+本实验分三步验证。
+
+第一步，在开发环境编译模块：
+
+```bash
+make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
+     KDIR=/path/to/rk3568/kernel
+```
+
+如果在 RK3568 板端原生编译，可以直接执行：
+
+```bash
+make KDIR=/lib/modules/$(uname -r)/build
+```
+
+第二步，加载模块并确认设备节点：
+
+```bash
+sudo insmod demo_chrdev.ko
+dmesg | tail -n 20
+ls -l /dev/demo_chrdev
+cat /proc/devices | grep demo_chrdev
+```
+
+期望看到类似日志：
+
+```text
+demo_chrdev loaded
+demo open
+recv: hello driver
+demo release
+```
+
+第三步，运行用户态测试程序：
+
+```bash
+gcc test_demo_chrdev.c -o test_demo_chrdev
+sudo ./test_demo_chrdev
+sudo strace -e openat,read,write,ioctl,close ./test_demo_chrdev
+```
+
+如果 `strace` 中能看到 `/dev/demo_chrdev` 被打开，并且 `write/read/ioctl` 返回值正常，就说明用户态到内核态的最小通路已经打通。
+
+## 复盘
+
+这类实验最容易出问题的地方不是 `file_operations` 本身，而是环境和错误路径。
+
+- 内核版本必须匹配。模块用哪个内核源码编出来，就应该加载到对应版本的 RK3568 系统里，否则容易出现 `invalid module format`。
+- 用户态指针不能直接在内核态解引用。所有用户态数据拷贝都必须走 `copy_from_user()` 或 `copy_to_user()`。
+- `device_create()` 成功之前，不一定会出现 `/dev/demo_chrdev`。如果没有自动创建设备节点，需要检查 `udev/mdev`，或者手动 `mknod`。
+- 错误路径必须反向释放资源。`alloc_chrdev_region()`、`cdev_add()`、`class_create()`、`device_create()` 任何一步失败，都要释放前面已经申请的资源。
+- 多进程同时访问时需要加锁。本文为了保持最小闭环使用全局缓冲区，真实项目里至少要加 `mutex` 或者为每个打开的文件维护私有上下文。
+
+我后面在 RK3568 车载项目里会把这个模型映射成更实际的接口，例如 `/dev/vehicle_alarm` 或 `/dev/gateway_gpio`：用户态网关通过 `ioctl()` 设置蜂鸣器状态，通过 `read()` 获取按键事件，Qt Dashboard 不直接碰硬件，只调用网关进程提供的状态。
 
 ## 字符设备是什么
 
