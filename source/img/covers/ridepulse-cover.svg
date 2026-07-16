@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#10181d"/>
+  <path d="M0 580c190-120 350-130 520-45s330 70 500-40 230-95 260-72v297H0z" fill="#172126"/>
+  <circle cx="330" cy="430" r="112" fill="none" stroke="#00a6a6" stroke-width="18"/>
+  <circle cx="830" cy="430" r="112" fill="none" stroke="#00a6a6" stroke-width="18"/>
+  <path d="M330 430l154-180 128 180H330l282-180 218 180" fill="none" stroke="#dbe8ea" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="86" y="86" width="410" height="178" rx="18" fill="#0c1215" stroke="#00a6a6" stroke-width="4"/>
+  <text x="122" y="158" font-family="Arial, sans-serif" font-size="54" font-weight="700" fill="#ffffff">RidePulse</text>
+  <text x="122" y="216" font-family="Arial, sans-serif" font-size="28" fill="#9cf5ef">STM32 Bicycle Computer</text>
+  <text x="930" y="166" font-family="Arial, sans-serif" font-size="72" font-weight="700" fill="#f2a33a">28.6</text>
+  <text x="1116" y="166" font-family="Arial, sans-serif" font-size="28" fill="#dbe8ea">km/h</text>
+</svg>

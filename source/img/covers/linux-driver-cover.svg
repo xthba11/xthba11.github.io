@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#10181d"/>
+  <rect x="140" y="120" width="1000" height="480" rx="22" fill="#172126" stroke="#00a6a6" stroke-width="5"/>
+  <path d="M220 220h230M220 285h390M220 350h320M220 415h500" stroke="#dbe8ea" stroke-width="18" stroke-linecap="round"/>
+  <path d="M820 210h120v120H820zM940 330h120v120H940zM700 330h120v120H700z" fill="none" stroke="#f2a33a" stroke-width="10"/>
+  <text x="220" y="540" font-family="Arial, sans-serif" font-size="60" font-weight="700" fill="#ffffff">Linux Driver Lab</text>
+</svg>

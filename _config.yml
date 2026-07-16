@@ -3,9 +3,9 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: 嵌入式技术栈
-subtitle: '记录嵌入式的点点滴滴'
-description: 'C语言 | Linux内核 | MCU开发 | 网络编程'
+title: XTHBA 嵌入式实验室
+subtitle: 'STM32 项目、FreeRTOS、LVGL、传感器与 Linux 调试记录'
+description: 'STM32F411 | FreeRTOS | LVGL | 传感器驱动 | Linux 驱动 | C 网络编程'
 author: XTHBA
 language: zh-CN
 timezone: Asia/Shanghai

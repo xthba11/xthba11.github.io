@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <rect width="240" height="240" rx="32" fill="#10181d"/>
+  <path d="M34 52h172v136H34z" fill="#172126" stroke="#00a6a6" stroke-width="6"/>
+  <path d="M56 82h66v12H56zM56 108h94v12H56zM56 134h54v12H56z" fill="#dbe8ea"/>
+  <path d="M154 88l30 30-30 30" fill="none" stroke="#f2a33a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="120" y="210" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#9cf5ef">XTHBA</text>
+</svg>

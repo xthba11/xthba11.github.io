@@ -12,7 +12,7 @@ tags:
   - 自行车码表
   - 嵌入式项目
 description: 基于现有 STM32 智能手表固件，规划并改造成一个自行车码表项目，复用 LVGL、FreeRTOS、传感器、外部 Flash、OTA、低功耗和看门狗能力。
-top_img: /img/embedded-lab-hero.png
+top_img: /img/covers/ridepulse-cover.svg
 ---
 
 这个项目最开始不是自行车码表，而是一套基于 STM32F411 的智能手表固件。它已经具备一个穿戴设备需要的大部分底层能力：屏幕显示、触摸输入、传感器采集、FreeRTOS 多任务、外部 Flash、LittleFS、OTA、低功耗和看门狗。

@@ -12,7 +12,7 @@ tags:
   - 看门狗
   - 嵌入式架构
 description: 基于现有智能手表工程，梳理 FreeRTOS 任务、队列、互斥锁、信号量和看门狗设计，并规划自行车码表 RideTask 的接入方式。
-top_img: /img/embedded-lab-hero.png
+top_img: /img/covers/rtos-cover.svg
 ---
 
 自行车码表看起来只是“显示速度和里程”，但如果要做成一个稳定运行的嵌入式项目，背后会涉及很多并发问题：显示刷新不能被传感器阻塞，Flash 写入不能卡住 UI，OTA 期间不能误触发看门狗，低功耗时任务要能暂停和恢复。

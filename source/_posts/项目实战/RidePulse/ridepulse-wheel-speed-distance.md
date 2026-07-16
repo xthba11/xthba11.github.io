@@ -12,7 +12,7 @@ tags:
   - 自行车码表
   - 速度计算
 description: 设计 RidePulse 自行车码表的轮速采集模块，使用霍尔传感器和 EXTI 中断统计车轮脉冲，计算当前速度、累计里程和骑行状态。
-top_img: /img/embedded-lab-hero.png
+top_img: /img/covers/ridepulse-cover.svg
 ---
 
 自行车码表最核心的功能是速度和里程。UI、OTA、Flash、低功耗都很重要，但如果没有稳定的速度输入，它就还不是一个真正的码表。

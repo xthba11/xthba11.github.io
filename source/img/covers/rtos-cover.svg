@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#10181d"/>
+  <g fill="#172126" stroke="#00a6a6" stroke-width="4">
+    <rect x="110" y="130" width="250" height="110" rx="10"/>
+    <rect x="515" y="130" width="250" height="110" rx="10"/>
+    <rect x="920" y="130" width="250" height="110" rx="10"/>
+    <rect x="312" y="390" width="250" height="110" rx="10"/>
+    <rect x="718" y="390" width="250" height="110" rx="10"/>
+  </g>
+  <g stroke="#dbe8ea" stroke-width="8" stroke-linecap="round">
+    <path d="M360 185h155M765 185h155M640 240v150M437 390l-202-150M843 390l202-150"/>
+  </g>
+  <text x="640" y="620" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" font-weight="700" fill="#ffffff">FreeRTOS Task Design</text>
+  <text x="640" y="670" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#9cf5ef">queues · mutex · watchdog · low power</text>
+</svg>

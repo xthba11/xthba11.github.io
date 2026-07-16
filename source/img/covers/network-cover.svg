@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#10181d"/>
+  <g fill="#172126" stroke="#00a6a6" stroke-width="6">
+    <circle cx="260" cy="210" r="64"/>
+    <circle cx="640" cy="360" r="84"/>
+    <circle cx="1020" cy="210" r="64"/>
+    <circle cx="360" cy="540" r="58"/>
+    <circle cx="920" cy="540" r="58"/>
+  </g>
+  <g stroke="#dbe8ea" stroke-width="8" stroke-linecap="round">
+    <path d="M320 235l240 92M960 235l-240 92M414 508l160-95M866 508l-160-95"/>
+  </g>
+  <text x="640" y="374" text-anchor="middle" font-family="Arial, sans-serif" font-size="40" font-weight="700" fill="#f2a33a">epoll</text>
+  <text x="640" y="650" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" font-weight="700" fill="#ffffff">C Network Debugging</text>
+</svg>

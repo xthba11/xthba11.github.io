@@ -39,10 +39,10 @@ code_blocks:
 # --------------------------------------
 # Image Settings
 # --------------------------------------
-favicon: /img/favicon.png
+favicon: /img/favicon.svg
 
 avatar:
-  img: /img/avatar.jpg
+  img: /img/avatar.svg
   effect: true
 
 disable_top_img: false
@@ -62,6 +62,11 @@ cover:
   aside_enable: true
   archives_enable: true
   default_cover:
+    - /img/embedded-lab-hero.png
+    - /img/covers/ridepulse-cover.svg
+    - /img/covers/rtos-cover.svg
+    - /img/covers/linux-driver-cover.svg
+    - /img/covers/network-cover.svg
 
 error_img:
   flink: /img/friend_404.gif
@@ -98,7 +103,8 @@ subtitle:
   effect: false
   source: false
   sub:
-    - C语言 | Linux内核 | MCU开发 | 网络编程
+    - STM32F411 | FreeRTOS | LVGL | RidePulse 自行车码表
+    - 传感器驱动、外部 Flash、OTA 与低功耗调试记录
 
 index_layout: 1
 
@@ -166,15 +172,15 @@ aside:
     category: true
   card_author:
     enable: true
-    description: C语言 | Linux内核 | MCU开发
+    description: STM32 / FreeRTOS / LVGL / Linux
     button:
       enable: true
       icon: fab fa-github
-      text: Follow Me
+      text: GitHub
       link: https://github.com/xthba11
   card_announcement:
     enable: true
-    content: 欢迎来到我的技术博客，记录嵌入式的点点滴滴
+    content: 正在把 STM32 智能手表固件改造成 RidePulse 自行车码表，记录真实代码、日志和踩坑。
   card_recent_post:
     enable: true
     limit: 5
