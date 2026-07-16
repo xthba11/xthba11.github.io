@@ -150,21 +150,21 @@ case UI_STATE_BikeMain:
 
 ```c
 typedef enum {
-    LVGL_RIDE_STATE_IDLE = 0,
-    LVGL_RIDE_STATE_READY,
-    LVGL_RIDE_STATE_RIDING,
-    LVGL_RIDE_STATE_PAUSED,
-    LVGL_RIDE_STATE_SAVING,
+    LVGL_RIDE_STATE_IDLE = 0,   /* 空闲，未进入码表页面 */
+    LVGL_RIDE_STATE_READY,      /* 就绪，已进入页面但未开始骑行 */
+    LVGL_RIDE_STATE_RIDING,     /* 骑行中 */
+    LVGL_RIDE_STATE_PAUSED,     /* 已暂停 */
+    LVGL_RIDE_STATE_SAVING,     /* 骑行结束，正在保存记录 */
 } lvgl_ride_state_t;
 
 typedef struct {
-    uint16_t speed_x10_kmh;
-    uint32_t distance_m;
-    uint32_t ride_time_s;
-    uint16_t heart_rate;
-    uint8_t battery_percent;
-    lvgl_ride_state_t state;
-    uint32_t update_tick;
+    uint16_t speed_x10_kmh;       /* 当前速度，km/h * 10 */
+    uint32_t distance_m;          /* 累计里程，单位米 */
+    uint32_t ride_time_s;         /* 骑行时长，单位秒 */
+    uint16_t heart_rate;          /* 当前心率，0 表示无数据 */
+    uint8_t battery_percent;      /* 电池电量百分比 */
+    lvgl_ride_state_t state;      /* 骑行状态 */
+    uint32_t update_tick;         /* 数据写入时的系统 tick，用于超时检测 */
 } lvgl_ride_data_t;
 ```
 
@@ -193,7 +193,7 @@ void lvgl_BikeMain_enter(void);
 在 `lvgl_port.c` 中实现：
 
 ```c
-static lvgl_ride_data_t g_ride_data;
+static lvgl_ride_data_t g_ride_data;  /* 全局骑行数据快照，由 RideTask 写、LVGLTask 读 */
 
 void lvgl_ride_data_write(const lvgl_ride_data_t *data)
 {
@@ -204,6 +204,7 @@ void lvgl_ride_data_write(const lvgl_ride_data_t *data)
     /*
      * 这里是 RideTask -> LVGLTask 的数据快照。
      * 如果后续出现并发问题，可以加 mutex 或临界区。
+     * 结构体较小，直接整体拷贝即可，无需逐字段赋值。
      */
     g_ride_data = *data;
 }
@@ -214,7 +215,7 @@ void lvgl_ride_data_read(lvgl_ride_data_t *data)
         return;
     }
 
-    *data = g_ride_data;
+    *data = g_ride_data;  /* LVGLTask 读走数据快照用于 UI 刷新 */
 }
 ```
 
@@ -239,13 +240,14 @@ void ride_computer_publish_to_ui(void)
 {
     lvgl_ride_data_t ui_data;
 
+    /* 从 RideService 内部结构体组装 LVGL 数据接口，解耦业务与 UI 层 */
     ui_data.speed_x10_kmh = s_ride.current_speed_x10_kmh;
     ui_data.distance_m = s_ride.distance_m;
     ui_data.ride_time_s = s_ride.ride_time_s;
-    ui_data.heart_rate = sensor_heart_rate_read();
-    ui_data.battery_percent = battery_get_percent();
+    ui_data.heart_rate = sensor_heart_rate_read();       /* 从传感器服务读取心率 */
+    ui_data.battery_percent = battery_get_percent();     /* 从电源管理读取电量 */
     ui_data.state = (lvgl_ride_state_t)s_ride.state;
-    ui_data.update_tick = osal_task_get_tick_count();
+    ui_data.update_tick = osal_task_get_tick_count();    /* 记录数据产生时间，用于 UI 超时检测 */
 
     lvgl_ride_data_write(&ui_data);
 }
@@ -280,14 +282,14 @@ ui_data.battery_percent = 100;
 
 ```c
 typedef struct {
-    lv_obj_t *screen;
-    lv_obj_t *label_state;
-    lv_obj_t *label_speed;
-    lv_obj_t *label_unit;
-    lv_obj_t *label_distance;
-    lv_obj_t *label_time;
-    lv_obj_t *label_heart;
-    lv_obj_t *label_battery;
+    lv_obj_t *screen;          /* 码表主页面容器 */
+    lv_obj_t *label_state;     /* 状态标签：READY / RIDING / PAUSED / SAVING */
+    lv_obj_t *label_speed;     /* 速度大数字，最大字号居中显示 */
+    lv_obj_t *label_unit;      /* 单位标签 "km/h" */
+    lv_obj_t *label_distance;  /* 里程标签，底部左侧 */
+    lv_obj_t *label_time;      /* 骑行时间标签，底部右侧 */
+    lv_obj_t *label_heart;     /* 心率标签 */
+    lv_obj_t *label_battery;   /* 电量标签 */
 } bike_main_ui_t;
 ```
 
@@ -353,6 +355,7 @@ void setup_scr_BikeMain(lv_ui *ui)
 ```c
 static void format_ride_time(uint32_t total_s, char *buf, uint32_t buf_size)
 {
+    /* 将秒数转换为 HH:MM:SS 格式字符串 */
     uint32_t h = total_s / 3600U;
     uint32_t m = (total_s % 3600U) / 60U;
     uint32_t s = total_s % 60U;
@@ -366,6 +369,7 @@ static void format_ride_time(uint32_t total_s, char *buf, uint32_t buf_size)
 ```c
 static void format_speed(uint16_t speed_x10, char *buf, uint32_t buf_size)
 {
+    /* 将 km/h*10 的定点数转换为 X.X 格式字符串，例如 286 -> "28.6" */
     snprintf(buf, buf_size, "%lu.%lu",
              speed_x10 / 10U,
              speed_x10 % 10U);
@@ -377,6 +381,7 @@ static void format_speed(uint16_t speed_x10, char *buf, uint32_t buf_size)
 ```c
 static void format_distance(uint32_t distance_m, char *buf, uint32_t buf_size)
 {
+    /* 将米转换为 X.XX km 格式，例如 12340m -> "12.34 km" */
     uint32_t km_int = distance_m / 1000U;
     uint32_t km_frac = (distance_m % 1000U) / 10U;
 
@@ -391,6 +396,7 @@ static void format_distance(uint32_t distance_m, char *buf, uint32_t buf_size)
 ```c
 void bike_main_screen_update(void)
 {
+    /* 由 LVGLTask 周期性调用，从 lvgl_port 读取骑行数据并更新所有 label 控件 */
     static uint32_t s_last_update_tick = 0;
     uint32_t now = osal_task_get_tick_count();
     lvgl_ride_data_t data;
@@ -491,9 +497,9 @@ lv_timer_create(bike_main_timer_cb, 200, NULL);
 ```c
 void bike_main_on_load(void)
 {
-    s_bike_main_active = true;
-    lvgl_BikeMain_enter();
-    ride_start();
+    s_bike_main_active = true;       /* 标记页面已激活，LVGLTask 将开始刷新本页 */
+    lvgl_BikeMain_enter();           /* 通知 SensorTask 进入码表页面，开启心率/气压采样 */
+    ride_start();                    /* 调试阶段自动开始骑行，后续改为用户按键触发 */
 }
 ```
 
@@ -514,6 +520,7 @@ static void bike_start_btn_event_cb(lv_event_t *e)
 {
     lv_event_code_t code = lv_event_get_code(e);
 
+    /* 点击按钮时切换骑行/暂停状态：骑行中点击 -> 暂停，暂停中点击 -> 恢复 */
     if (code == LV_EVENT_CLICKED) {
         if (ride_computer_is_riding()) {
             ride_pause();

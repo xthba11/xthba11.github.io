@@ -191,9 +191,9 @@ void bsp_wheel_speed_reset(void);
 ```c
 #include "bsp_wheel_speed.h"
 
-static volatile uint32_t s_pulse_count = 0;
-static volatile uint32_t s_last_pulse_tick = 0;
-static volatile uint32_t s_last_delta_ms = 0;
+static volatile uint32_t s_pulse_count = 0;      /* 累计脉冲计数，中断递增，任务读取 */
+static volatile uint32_t s_last_pulse_tick = 0;   /* 上一次有效脉冲时的系统 tick */
+static volatile uint32_t s_last_delta_ms = 0;     /* 最近两次有效脉冲之间的时间间隔 (ms) */
 
 void bsp_wheel_speed_init(void)
 {
@@ -324,17 +324,17 @@ typedef enum {
 } ride_state_t;
 
 typedef struct {
-    uint32_t wheel_circumference_mm;
-    uint32_t last_pulse_count;
-    uint32_t current_speed_x10_kmh;
-    uint32_t distance_m;
-    uint32_t ride_time_s;
-    uint32_t max_speed_x10_kmh;
-    uint32_t avg_speed_x10_kmh;
-    uint32_t start_tick_ms;
-    uint32_t last_update_tick_ms;
-    uint32_t last_motion_tick_ms;
-    ride_state_t state;
+    uint32_t wheel_circumference_mm;   /* 轮周长，单位毫米 */
+    uint32_t last_pulse_count;         /* 上一次更新时的脉冲计数，用于计算增量 */
+    uint32_t current_speed_x10_kmh;    /* 当前速度，单位 km/h * 10（定点数，避免浮点） */
+    uint32_t distance_m;               /* 累计里程，单位米 */
+    uint32_t ride_time_s;              /* 本次骑行时长，单位秒 */
+    uint32_t max_speed_x10_kmh;        /* 本次骑行的最高速度 */
+    uint32_t avg_speed_x10_kmh;        /* 本次骑行的平均速度 */
+    uint32_t start_tick_ms;            /* 骑行开始时的系统 tick */
+    uint32_t last_update_tick_ms;      /* 上一次调用 ride_computer_update 的 tick */
+    uint32_t last_motion_tick_ms;      /* 最后一次检测到车轮转动时的 tick */
+    ride_state_t state;                /* 当前骑行状态机状态 */
 } ride_data_t;
 
 void ride_computer_init(void);
@@ -364,6 +364,7 @@ static ride_data_t s_ride;
 
 void ride_computer_init(void)
 {
+    /* 骑行数据结构体清零，设置默认轮周长，初始状态为 IDLE */
     memset(&s_ride, 0, sizeof(s_ride));
     s_ride.wheel_circumference_mm = RIDE_DEFAULT_WHEEL_CIRCUMFERENCE_MM;
     s_ride.state = RIDE_STATE_IDLE;
@@ -381,8 +382,9 @@ void ride_start(void)
 {
     uint32_t now = osal_task_get_tick_count();
 
-    bsp_wheel_speed_reset();
+    bsp_wheel_speed_reset();          /* 清零轮速 BSP 层的脉冲计数 */
 
+    /* 重置所有骑行数据：速度、里程、时间、极值、时间戳均清零 */
     s_ride.last_pulse_count = 0;
     s_ride.current_speed_x10_kmh = 0;
     s_ride.distance_m = 0;
@@ -392,11 +394,12 @@ void ride_start(void)
     s_ride.start_tick_ms = now;
     s_ride.last_update_tick_ms = now;
     s_ride.last_motion_tick_ms = now;
-    s_ride.state = RIDE_STATE_RIDING;
+    s_ride.state = RIDE_STATE_RIDING;  /* 进入骑行状态 */
 }
 
 void ride_pause(void)
 {
+    /* 仅当正在骑行时才允许暂停，速度归零 */
     if (s_ride.state == RIDE_STATE_RIDING) {
         s_ride.state = RIDE_STATE_PAUSED;
         s_ride.current_speed_x10_kmh = 0;
@@ -405,6 +408,7 @@ void ride_pause(void)
 
 void ride_resume(void)
 {
+    /* 从暂停状态恢复到骑行状态，刷新更新时间戳 */
     if (s_ride.state == RIDE_STATE_PAUSED) {
         s_ride.state = RIDE_STATE_RIDING;
         s_ride.last_update_tick_ms = osal_task_get_tick_count();
@@ -413,6 +417,7 @@ void ride_resume(void)
 
 void ride_stop(void)
 {
+    /* 速度归零并进入保存状态，后续由 ride_stop_and_save() 写入 Flash */
     s_ride.current_speed_x10_kmh = 0;
     s_ride.state = RIDE_STATE_SAVING;
 }
@@ -537,19 +542,21 @@ void ride_computer_task(void *argument)
 {
     uint32_t last_log_tick = 0;
 
-    ride_computer_init();
-    ride_start();
+    ride_computer_init();             /* 初始化骑行数据结构 */
+    ride_start();                     /* 调试阶段自动开始，后续改为用户按键触发 */
 
+    /* 向软件看门狗注册本任务，超时时间 1000ms */
     watchdog_register(osal_task_get_current_handle(), 1000, "RideTask");
 
     for (;;) {
         uint32_t now = osal_task_get_tick_count();
 
-        watchdog_feed(osal_task_get_current_handle());
+        watchdog_feed(osal_task_get_current_handle());  /* 周期喂狗 */
 
-        ride_computer_update(now);
-        ride_computer_publish_to_ui();
+        ride_computer_update(now);       /* 读取轮速脉冲，计算速度/里程/时间 */
+        ride_computer_publish_to_ui();   /* 将计算结果推送给 LVGL 显示 */
 
+        /* 每秒输出一次调试日志，避免高频打印影响实时性 */
         if ((now - last_log_tick) >= 1000U) {
             DEBUG_OUT("ride speed=%lu.%lu km/h distance=%lu m time=%lu s state=%d",
                       s_ride.current_speed_x10_kmh / 10U,
@@ -560,7 +567,7 @@ void ride_computer_task(void *argument)
             last_log_tick = now;
         }
 
-        osal_task_delay_ms(100);
+        osal_task_delay_ms(100);        /* 100ms 周期，平衡实时性与 CPU 负载 */
     }
 }
 ```
@@ -576,12 +583,13 @@ void ride_computer_publish_to_ui(void)
 {
     lvgl_ride_data_t ui_data;
 
+    /* 从 RideService 内部结构体拷贝到 LVGL 数据接口，解耦 UI 与业务层 */
     ui_data.speed_x10_kmh = s_ride.current_speed_x10_kmh;
     ui_data.distance_m = s_ride.distance_m;
     ui_data.ride_time_s = s_ride.ride_time_s;
     ui_data.ride_state = (uint8_t)s_ride.state;
 
-    lvgl_ride_data_write(&ui_data);
+    lvgl_ride_data_write(&ui_data);   /* 写入 lvgl_port 的数据快照 */
 }
 ```
 

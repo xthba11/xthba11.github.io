@@ -80,22 +80,22 @@ lfs_file_open(&lfs, &file, "boot_count", LFS_O_RDWR | LFS_O_CREAT);
 #define RIDE_RECORD_VERSION 1U
 
 typedef struct {
-    uint32_t magic;
-    uint16_t version;
-    uint16_t size;
+    uint32_t magic;                /* 魔数 0x52494445 ("RIDE")，用于校验文件类型 */
+    uint16_t version;              /* 结构体版本号，用于后续兼容性升级 */
+    uint16_t size;                 /* 结构体总大小，读取时校验完整性 */
 
-    uint32_t start_timestamp;
-    uint32_t end_timestamp;
-    uint32_t distance_m;
-    uint32_t ride_time_s;
+    uint32_t start_timestamp;      /* 骑行开始时间戳 (Unix 时间或系统 tick) */
+    uint32_t end_timestamp;        /* 骑行结束时间戳 */
+    uint32_t distance_m;           /* 本次骑行总里程，单位米 */
+    uint32_t ride_time_s;          /* 本次骑行总时长，单位秒 */
 
-    uint32_t avg_speed_x10_kmh;
-    uint32_t max_speed_x10_kmh;
+    uint32_t avg_speed_x10_kmh;    /* 平均速度，km/h * 10（定点数） */
+    uint32_t max_speed_x10_kmh;    /* 最高速度，km/h * 10（定点数） */
 
-    uint16_t avg_heart_rate;
-    uint16_t max_heart_rate;
+    uint16_t avg_heart_rate;       /* 平均心率 */
+    uint16_t max_heart_rate;       /* 最高心率 */
 
-    uint32_t checksum;
+    uint32_t checksum;             /* 简单校验和，保存前计算，读取后验证 */
 } ride_record_t;
 ```
 
@@ -184,26 +184,26 @@ typedef struct {
 #include <stdint.h>
 #include <stdbool.h>
 
-#define RIDE_RECORD_MAGIC   0x52494445U
-#define RIDE_RECORD_VERSION 1U
+#define RIDE_RECORD_MAGIC   0x52494445U  /* 魔数 "RIDE"，标记文件为骑行记录 */
+#define RIDE_RECORD_VERSION 1U           /* 结构体版本 */
 
 typedef struct {
-    uint32_t magic;
-    uint16_t version;
-    uint16_t size;
+    uint32_t magic;                /* 魔数 */
+    uint16_t version;              /* 版本号 */
+    uint16_t size;                 /* 结构体大小 */
 
-    uint32_t start_timestamp;
-    uint32_t end_timestamp;
-    uint32_t distance_m;
-    uint32_t ride_time_s;
+    uint32_t start_timestamp;      /* 开始时间戳 */
+    uint32_t end_timestamp;        /* 结束时间戳 */
+    uint32_t distance_m;           /* 总里程 (米) */
+    uint32_t ride_time_s;          /* 骑行时长 (秒) */
 
-    uint32_t avg_speed_x10_kmh;
-    uint32_t max_speed_x10_kmh;
+    uint32_t avg_speed_x10_kmh;    /* 平均速度 km/h * 10 */
+    uint32_t max_speed_x10_kmh;    /* 最高速度 km/h * 10 */
 
-    uint16_t avg_heart_rate;
-    uint16_t max_heart_rate;
+    uint16_t avg_heart_rate;       /* 平均心率 */
+    uint16_t max_heart_rate;       /* 最高心率 */
 
-    uint32_t checksum;
+    uint32_t checksum;             /* 校验和 */
 } ride_record_t;
 
 int ride_record_storage_init(void);
@@ -222,9 +222,10 @@ int ride_record_get_count(uint32_t *count);
 ```c
 static uint32_t ride_record_checksum(const ride_record_t *record)
 {
+    /* 简单校验和：遍历结构体中除 checksum 字段外的所有字节，累加求和 */
     const uint8_t *p = (const uint8_t *)record;
     uint32_t sum = 0;
-    uint32_t len = sizeof(ride_record_t) - sizeof(record->checksum);
+    uint32_t len = sizeof(ride_record_t) - sizeof(record->checksum);  /* 排除 checksum 自身 */
 
     for (uint32_t i = 0; i < len; i++) {
         sum += p[i];
@@ -278,21 +279,23 @@ int ride_record_storage_init(void)
 {
     int err;
 
-    lfs_port_init();
+    lfs_port_init();  /* 初始化外部 Flash 端口驱动 */
 
+    /* 尝试挂载 LittleFS，首次启动或文件系统损坏时自动格式化 */
     err = lfs_mount(&lfs, &lfs_w25q64_cfg);
     if (err) {
-        err = lfs_format(&lfs, &lfs_w25q64_cfg);
+        err = lfs_format(&lfs, &lfs_w25q64_cfg);  /* 格式化文件系统 */
         if (err) {
             return err;
         }
 
-        err = lfs_mount(&lfs, &lfs_w25q64_cfg);
+        err = lfs_mount(&lfs, &lfs_w25q64_cfg);   /* 格式化后重新挂载 */
         if (err) {
             return err;
         }
     }
 
+    /* 创建 rides 目录，已存在则忽略 LFS_ERR_EXIST 错误 */
     err = lfs_mkdir(&lfs, "rides");
     if (err && err != LFS_ERR_EXIST) {
         return err;
@@ -337,6 +340,7 @@ static int ride_record_read_index(uint32_t *next_index)
     int err;
     uint32_t value = 1;
 
+    /* 尝试打开序号文件，如果不存在则从 1 开始 */
     err = lfs_file_open(&lfs, &file, "rides/index.dat", LFS_O_RDONLY);
     if (err) {
         *next_index = 1;
@@ -347,7 +351,7 @@ static int ride_record_read_index(uint32_t *next_index)
     lfs_file_close(&lfs, &file);
 
     if (value == 0) {
-        value = 1;
+        value = 1;  /* 防止序号为 0，导致文件名为 ride_000000.dat */
     }
 
     *next_index = value;
@@ -363,6 +367,7 @@ static int ride_record_write_index(uint32_t next_index)
     lfs_file_t file;
     int err;
 
+    /* 以覆盖写方式打开序号文件，保存下一条记录的编号 */
     err = lfs_file_open(&lfs, &file, "rides/index.dat",
                         LFS_O_WRONLY | LFS_O_CREAT | LFS_O_TRUNC);
     if (err) {
@@ -391,6 +396,7 @@ int ride_record_save(const ride_record_t *record)
         return -1;
     }
 
+    /* 读取当前序号，生成文件名 rides/ride_xxxxxx.dat */
     err = ride_record_read_index(&next_index);
     if (err) {
         return err;
@@ -398,13 +404,15 @@ int ride_record_save(const ride_record_t *record)
 
     snprintf(path, sizeof(path), "rides/ride_%06lu.dat", next_index);
 
+    /* 拷贝记录并填入头部元信息与校验和 */
     rec = *record;
     rec.magic = RIDE_RECORD_MAGIC;
     rec.version = RIDE_RECORD_VERSION;
     rec.size = sizeof(ride_record_t);
-    rec.checksum = 0;
-    rec.checksum = ride_record_checksum(&rec);
+    rec.checksum = 0;                              /* 先清零再计算 */
+    rec.checksum = ride_record_checksum(&rec);     /* 计算除 checksum 外所有字段的校验和 */
 
+    /* 创建新文件并写入结构体 */
     err = lfs_file_open(&lfs, &file, path,
                         LFS_O_WRONLY | LFS_O_CREAT | LFS_O_TRUNC);
     if (err) {
@@ -417,10 +425,10 @@ int ride_record_save(const ride_record_t *record)
         return err;
     }
 
-    lfs_file_sync(&lfs, &file);
+    lfs_file_sync(&lfs, &file);   /* 强制将缓存刷入 Flash，降低掉电丢数据风险 */
     lfs_file_close(&lfs, &file);
 
-    ride_record_write_index(next_index + 1U);
+    ride_record_write_index(next_index + 1U);  /* 更新序号文件，为下一条记录准备 */
 
     DEBUG_OUT("ride save ok path=%s distance=%lu time=%lu",
               path, rec.distance_m, rec.ride_time_s);
@@ -438,10 +446,11 @@ int ride_record_save(const ride_record_t *record)
 ```c
 static void ride_build_record(ride_record_t *record)
 {
+    /* 从 RideService 内部结构体组装骑行记录，用于保存到 Flash */
     memset(record, 0, sizeof(*record));
 
     record->start_timestamp = s_ride.start_timestamp;
-    record->end_timestamp = rtc_get_unix_timestamp();
+    record->end_timestamp = rtc_get_unix_timestamp();  /* 如果 RTC 接口未就绪，可改用系统 tick */
     record->distance_m = s_ride.distance_m;
     record->ride_time_s = s_ride.ride_time_s;
     record->avg_speed_x10_kmh = s_ride.avg_speed_x10_kmh;
@@ -454,8 +463,8 @@ void ride_stop_and_save(void)
 {
     ride_record_t record;
 
-    s_ride.state = RIDE_STATE_SAVING;
-    ride_build_record(&record);
+    s_ride.state = RIDE_STATE_SAVING;    /* 进入保存状态，UI 可显示 "SAVING" */
+    ride_build_record(&record);          /* 组装记录结构体 */
 
     if (ride_record_save(&record) == 0) {
         DEBUG_OUT("ride record saved");
@@ -463,7 +472,7 @@ void ride_stop_and_save(void)
         DEBUG_OUT("ride record save failed");
     }
 
-    s_ride.state = RIDE_STATE_IDLE;
+    s_ride.state = RIDE_STATE_IDLE;      /* 保存完成后回到空闲状态 */
 }
 ```
 
@@ -517,6 +526,7 @@ int ride_record_load_by_index(uint32_t index, ride_record_t *record)
 
     snprintf(path, sizeof(path), "rides/ride_%06lu.dat", index);
 
+    /* 以只读方式打开骑行记录文件 */
     err = lfs_file_open(&lfs, &file, path, LFS_O_RDONLY);
     if (err) {
         return err;
@@ -526,9 +536,10 @@ int ride_record_load_by_index(uint32_t index, ride_record_t *record)
     lfs_file_close(&lfs, &file);
 
     if (err != sizeof(rec)) {
-        return -1;
+        return -1;  /* 读取长度不匹配，文件可能损坏或格式不一致 */
     }
 
+    /* 三重校验：魔数、结构体大小、校验和，任意一项不通过则拒绝 */
     if (rec.magic != RIDE_RECORD_MAGIC) {
         return -1;
     }

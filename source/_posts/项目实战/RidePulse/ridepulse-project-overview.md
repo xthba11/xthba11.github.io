@@ -130,9 +130,9 @@ ec_s100_watch_V2.2_T2469/
 原工程的 `lvgl_port.c` 已经承担了 UI 与业务层之间的数据交换职责。后续应该新增类似接口：
 
 ```c
-void lvgl_ride_speed_get_data(uint16_t speed_x10_kmh);
-void lvgl_ride_distance_get_data(uint32_t distance_m);
-void lvgl_ride_time_get_data(uint32_t ride_time_s);
+void lvgl_ride_speed_get_data(uint16_t speed_x10_kmh);     /* 写入当前速度 (km/h * 10) */
+void lvgl_ride_distance_get_data(uint32_t distance_m);     /* 写入累计里程 (米) */
+void lvgl_ride_time_get_data(uint32_t ride_time_s);        /* 写入骑行时长 (秒) */
 ```
 
 不要让 LVGL 页面直接读传感器或全局业务状态。UI 层只负责展示，骑行数据由 `RideService` 计算后推给 UI。
@@ -278,10 +278,10 @@ Middlewares/Ymodem/
 接口建议：
 
 ```c
-void bsp_wheel_speed_init(void);
-void bsp_wheel_speed_on_exti_irq(uint32_t tick_ms);
-uint32_t bsp_wheel_speed_get_pulse_count(void);
-uint32_t bsp_wheel_speed_get_last_pulse_tick(void);
+void bsp_wheel_speed_init(void);                           /* 初始化轮速 GPIO 和静态变量 */
+void bsp_wheel_speed_on_exti_irq(uint32_t tick_ms);        /* 由 EXTI 中断回调调用，记录脉冲时间 */
+uint32_t bsp_wheel_speed_get_pulse_count(void);            /* 获取累计脉冲数 */
+uint32_t bsp_wheel_speed_get_last_pulse_tick(void);        /* 获取最后一次脉冲的系统 tick */
 ```
 
 注意：中断里不要做浮点计算，也不要直接操作 LVGL。
@@ -308,13 +308,13 @@ uint32_t bsp_wheel_speed_get_last_pulse_tick(void);
 接口建议：
 
 ```c
-void ride_computer_init(void);
-void ride_computer_task(void *argument);
-void ride_start(void);
-void ride_pause(void);
-void ride_resume(void);
-void ride_stop_and_save(void);
-void ride_get_data(ride_data_t *out);
+void ride_computer_init(void);                  /* 初始化骑行数据结构和轮速 BSP */
+void ride_computer_task(void *argument);         /* FreeRTOS 任务入口，周期更新骑行数据 */
+void ride_start(void);                           /* 开始骑行：清零数据，进入 RIDING 状态 */
+void ride_pause(void);                           /* 暂停骑行：速度归零，停止累计时间 */
+void ride_resume(void);                          /* 恢复骑行：从 PAUSED 恢复到 RIDING */
+void ride_stop_and_save(void);                   /* 结束骑行：保存记录到 LittleFS */
+void ride_get_data(ride_data_t *out);            /* 读取当前骑行数据快照 */
 ```
 
 ## 数据流设计
@@ -354,11 +354,11 @@ ExtFlash Service + LittleFS
 
 ```c
 typedef enum {
-    RIDE_STATE_IDLE = 0,
-    RIDE_STATE_READY,
-    RIDE_STATE_RIDING,
-    RIDE_STATE_PAUSED,
-    RIDE_STATE_SAVING,
+    RIDE_STATE_IDLE = 0,   /* 空闲：未进入码表页面 */
+    RIDE_STATE_READY,      /* 就绪：已进入页面，等待开始 */
+    RIDE_STATE_RIDING,     /* 骑行中：正在累计里程和时间 */
+    RIDE_STATE_PAUSED,     /* 暂停：超时无脉冲或用户手动暂停 */
+    RIDE_STATE_SAVING,     /* 保存中：骑行结束，正在写入 Flash */
 } ride_state_t;
 ```
 

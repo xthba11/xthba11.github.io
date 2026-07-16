@@ -69,19 +69,19 @@ Host Interface 负责和主机协议打交道。不同产品可能是 NVMe、SAT
 
 ```c
 typedef enum {
-    REQ_READ,
-    REQ_WRITE,
-    REQ_FLUSH,
-    REQ_TRIM,
+    REQ_READ,   // 读请求
+    REQ_WRITE,  // 写请求
+    REQ_FLUSH,  // 刷写请求：确保数据持久化到 NAND
+    REQ_TRIM,   // 裁剪请求：通知 SSD 某些 LBA 不再有效
 } req_type_t;
 
 typedef struct {
-    req_type_t type;
-    uint64_t lba;
-    uint32_t nlb;
-    void *buf;
-    uint16_t qid;
-    uint16_t cid;
+    req_type_t type;  // 请求类型（读/写/刷写/裁剪）
+    uint64_t lba;     // 起始逻辑块地址 (Logical Block Address)
+    uint32_t nlb;     // 逻辑块数量 (Number of Logical Blocks)
+    void *buf;        // 数据缓冲区指针（DMA 地址或虚拟地址）
+    uint16_t qid;     // 提交队列 ID (Submission Queue ID)
+    uint16_t cid;     // 命令 ID (Command ID)，用于 completion 匹配
 } io_req_t;
 ```
 
@@ -98,10 +98,10 @@ Scheduler 负责内部请求排队和调度。
 
 ```c
 typedef struct {
-    io_req_t *items[256];
-    uint16_t head;
-    uint16_t tail;
-    uint16_t count;
+    io_req_t *items[256];  // 请求指针数组，固定容量 256
+    uint16_t head;         // 队列头指针：出队位置
+    uint16_t tail;         // 队列尾指针：入队位置
+    uint16_t count;        // 当前队列中的请求数量
 } req_queue_t;
 ```
 
@@ -118,15 +118,15 @@ FTL 负责维护逻辑地址到物理地址的映射。
 
 ```c
 typedef struct {
-    uint16_t ch;
-    uint16_t lun;
-    uint16_t block;
-    uint16_t page;
+    uint16_t ch;    // 通道号 (channel)
+    uint16_t lun;   // 逻辑单元号 (LUN)
+    uint16_t block; // 块号 (block index)
+    uint16_t page;  // 页号 (page index within block)
 } ppa_t;
 
 typedef struct {
-    ppa_t *l2p_table;
-    uint32_t entry_count;
+    ppa_t *l2p_table;       // L2P 映射表指针：每个 LBA 对应一个 PPA
+    uint32_t entry_count;   // 映射表条目总数（即 LBA 范围大小）
 } ftl_context_t;
 ```
 
@@ -147,16 +147,16 @@ NAND 操作需要考虑并行性。典型维度包括 channel、CE、LUN、plane
 
 ```c
 typedef enum {
-    NAND_READ,
-    NAND_PROGRAM,
-    NAND_ERASE,
+    NAND_READ,     // NAND 读操作：以 page 为单位读出数据
+    NAND_PROGRAM,  // NAND 编程操作：以 page 为单位写入数据
+    NAND_ERASE,    // NAND 擦除操作：以 block 为单位擦除
 } nand_op_t;
 
 typedef struct {
-    nand_op_t op;
-    ppa_t ppa;
-    void *data;
-    void *meta;
+    nand_op_t op;   // NAND 操作类型（读/编程/擦除）
+    ppa_t ppa;      // 目标物理地址（通道/LUN/块/页）
+    void *data;     // 数据缓冲区指针（读：存放读出数据；写：源数据）
+    void *meta;     // 元数据/OOB 缓冲区指针（ECC、LBA 等信息）
 } nand_req_t;
 ```
 
@@ -186,12 +186,12 @@ SSD 固件里后台任务非常关键：
 
 ```c
 typedef struct {
-    uint32_t magic;
-    uint32_t seq;
-    uint64_t lba;
-    ppa_t new_ppa;
-    ppa_t old_ppa;
-    uint32_t crc;
+    uint32_t magic;    // 魔数：标识日志条目的有效性
+    uint32_t seq;      // 序列号：单调递增，掉电恢复时确定日志顺序
+    uint64_t lba;      // 逻辑块地址：本次映射变更对应的 LBA
+    ppa_t new_ppa;     // 新物理地址：LBA 更新后的映射位置
+    ppa_t old_ppa;     // 旧物理地址：LBA 更新前的映射位置（用于回滚/一致性检查）
+    uint32_t crc;      // CRC 校验：保证本条日志记录的完整性
 } map_journal_t;
 ```
 

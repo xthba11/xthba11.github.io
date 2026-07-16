@@ -75,11 +75,11 @@ CanReceiver Thread
 
 ```cpp
 struct CanFrame {
-    std::string ifname;
-    std::uint32_t can_id = 0;
-    std::uint8_t dlc = 0;
-    std::uint8_t data[8] = {0};
-    std::uint64_t timestamp_ms = 0;
+    std::string ifname;              // 来源接口名，如 "vcan0" 或 "can0"
+    std::uint32_t can_id = 0;        // CAN 标准帧 ID（11 位）
+    std::uint8_t dlc = 0;            // 数据长度（0~8 字节）
+    std::uint8_t data[8] = {0};      // 8 字节数据载荷
+    std::uint64_t timestamp_ms = 0;  // 接收时间戳（毫秒）
 };
 ```
 
@@ -106,12 +106,14 @@ socket(PF_CAN, SOCK_RAW, CAN_RAW)
 ```cpp
 bool CanReceiver::open(const std::string& ifname)
 {
+    // 1. 创建 CAN 原始套接字
     fd_ = socket(PF_CAN, SOCK_RAW, CAN_RAW);
     if (fd_ < 0) {
         perror("socket");
         return false;
     }
 
+    // 2. 通过接口名获取接口索引
     struct ifreq ifr {};
     std::snprintf(ifr.ifr_name, sizeof(ifr.ifr_name), "%s", ifname.c_str());
 
@@ -122,6 +124,7 @@ bool CanReceiver::open(const std::string& ifname)
         return false;
     }
 
+    // 3. 绑定套接字到指定 CAN 接口
     struct sockaddr_can addr {};
     addr.can_family = AF_CAN;
     addr.can_ifindex = ifr.ifr_ifindex;
@@ -147,31 +150,34 @@ void CanReceiver::receiveLoop()
 {
     while (running_) {
         struct can_frame raw {};
-        ssize_t n = read(fd_, &raw, sizeof(raw));
+        ssize_t n = read(fd_, &raw, sizeof(raw));  // 阻塞读取 CAN 帧
 
         if (n < 0) {
             if (errno == EINTR) {
-                continue;
+                continue;  // 信号中断，继续等待
             }
             perror("read can");
-            break;
+            break;  // 不可恢复错误，退出接收循环
         }
 
         if (n != sizeof(raw)) {
-            stats_.drop++;
+            stats_.drop++;  // 接收不完整，丢弃
             continue;
         }
 
+        // 转换内核格式为项目内部格式
         CanFrame frame;
         frame.ifname = ifname_;
-        frame.can_id = raw.can_id & CAN_SFF_MASK;
+        frame.can_id = raw.can_id & CAN_SFF_MASK;  // 掩码提取标准帧 ID
         frame.dlc = raw.can_dlc;
         std::memcpy(frame.data, raw.data, raw.can_dlc);
         frame.timestamp_ms = nowMs();
 
+        // 投递到线程安全队列供解析线程消费
         queue_.push(frame);
         stats_.rx++;
 
+        // 按转发规则判断是否需要发送到输出接口
         if (router_ && router_->shouldForward(frame.can_id)) {
             if (router_->route(frame)) {
                 stats_.tx++;
@@ -208,16 +214,17 @@ void CanReceiver::receiveLoop()
 转发判断：
 
 ```cpp
+// 判断该 CAN ID 是否应该转发
 bool CanRouter::shouldForward(std::uint32_t can_id) const
 {
-    bool hit = rule_ids_.count(can_id) > 0;
+    bool hit = rule_ids_.count(can_id) > 0;  // 是否命中规则集合
     if (mode_ == "whitelist") {
-        return hit;
+        return hit;   // 白名单模式：在列表中的才转发
     }
     if (mode_ == "blacklist") {
-        return !hit;
+        return !hit;  // 黑名单模式：不在列表中的才转发
     }
-    return false;
+    return false;     // 未配置规则，默认不转发
 }
 ```
 
@@ -294,8 +301,10 @@ cangen vcan0 -g 1 -I 100 -L 8
 项目早期很容易忽略 Ctrl+C 退出。建议处理信号：
 
 ```cpp
+// 全局运行标志，信号处理函数和主循环共享
 static std::atomic<bool> g_running{true};
 
+// SIGINT / SIGTERM 处理：通知主循环安全退出
 static void onSignal(int)
 {
     g_running = false;

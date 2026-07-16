@@ -91,16 +91,19 @@ sudo ip link set up vcan0
 加载内核模块：
 
 ```bash
-sudo modprobe can
-sudo modprobe can_raw
-sudo modprobe vcan
+# 加载 CAN 协议栈内核模块
+sudo modprobe can         # CAN 总线核心模块
+sudo modprobe can_raw     # SocketCAN 原始套接字支持
+sudo modprobe vcan        # 虚拟 CAN 设备驱动
 ```
 
 创建两个虚拟 CAN 接口：
 
 ```bash
+# 创建两个虚拟 CAN 接口（已存在则忽略错误）
 sudo ip link add dev vcan0 type vcan 2>/dev/null || true
 sudo ip link add dev vcan1 type vcan 2>/dev/null || true
+# 启动虚拟 CAN 接口（vcan 不需要设置波特率）
 sudo ip link set up vcan0
 sudo ip link set up vcan1
 ```
@@ -108,6 +111,7 @@ sudo ip link set up vcan1
 检查状态：
 
 ```bash
+# 检查接口详细信息（含状态标志）
 ip -details link show vcan0
 ip -details link show vcan1
 ```
@@ -184,6 +188,7 @@ cansend vcan0 100#1122334455667788
 第三，压力报文能生成：
 
 ```bash
+# 压力测试：每10ms发送一条CAN帧，固定ID=0x100，数据长度8字节
 cangen vcan0 -g 10 -I 100 -L 8
 ```
 
@@ -196,12 +201,12 @@ cangen vcan0 -g 10 -I 100 -L 8
 第四，RK3568 板端也能执行同样流程：
 
 ```bash
-uname -a
-ls /proc/net/can
-sudo modprobe vcan
-sudo ip link add dev vcan0 type vcan 2>/dev/null || true
-sudo ip link set up vcan0
-candump vcan0
+uname -a                                              # 确认内核版本
+ls /proc/net/can                                      # 检查内核 CAN 子系统是否已启用
+sudo modprobe vcan                                    # 加载 vcan 模块
+sudo ip link add dev vcan0 type vcan 2>/dev/null || true  # 创建 vcan0
+sudo ip link set up vcan0                             # 启动 vcan0
+candump vcan0                                         # 监听验证
 ```
 
 如果板端没有 `can-utils`，可以先交叉编译或用包管理器安装。项目早期也可以先在 Ubuntu PC 上完成软件逻辑，再迁移到板端。
@@ -213,6 +218,7 @@ candump vcan0
 说明 `vcan0` 已经创建过了。可以忽略，或者先删除：
 
 ```bash
+# 先删除已有接口再重新创建
 sudo ip link delete vcan0
 ```
 
@@ -234,9 +240,9 @@ sudo ip link add dev vcan0 type vcan
 按顺序检查：
 
 ```bash
-ip link show vcan0
-lsmod | grep vcan
-dmesg | tail -n 20
+ip link show vcan0    # 检查接口是否存在且已启动
+lsmod | grep vcan      # 检查 vcan 模块是否已加载
+dmesg | tail -n 20     # 查看内核日志排查底层错误
 ```
 
 最常见原因是接口没 `set up`。
@@ -249,17 +255,22 @@ dmesg | tail -n 20
 
 ```bash
 #!/usr/bin/env bash
-set -e
+# setup_vcan.sh - 一键创建 vcan0/vcan1 虚拟 CAN 测试环境
+set -e  # 任何命令失败时立即退出
 
+# 加载 CAN 协议栈内核模块
 sudo modprobe can
 sudo modprobe can_raw
 sudo modprobe vcan
 
+# 创建虚拟 CAN 接口（已存在则忽略）
 sudo ip link add dev vcan0 type vcan 2>/dev/null || true
 sudo ip link add dev vcan1 type vcan 2>/dev/null || true
+# 启动虚拟 CAN 接口
 sudo ip link set up vcan0
 sudo ip link set up vcan1
 
+# 确认接口状态
 ip link show vcan0
 ip link show vcan1
 ```

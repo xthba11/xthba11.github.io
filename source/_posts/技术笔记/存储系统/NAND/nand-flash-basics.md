@@ -41,6 +41,8 @@ Die
 读操作以 page 为单位。
 
 ```c
+// NAND 页读操作：从指定 block/page 读出数据和 OOB 区域
+// 返回值：0 成功；非 0 表示读失败，需检查 NAND 状态寄存器
 int NAND_ReadPage(uint32_t block, uint32_t page, void *data, void *oob);
 ```
 
@@ -51,6 +53,9 @@ int NAND_ReadPage(uint32_t block, uint32_t page, void *data, void *oob);
 写操作也是以 page 为单位，但不能随意覆盖已经写过的位置。
 
 ```c
+// NAND 页编程操作：将数据和 OOB 写入指定 block/page
+// 约束：page 需从低到高顺序编程，不能覆盖已编程的 page
+// 返回值：0 成功；非 0 表示编程失败（可能产生运行时坏块）
 int NAND_ProgramPage(uint32_t block, uint32_t page,
                      const void *data, const void *oob);
 ```
@@ -62,6 +67,9 @@ int NAND_ProgramPage(uint32_t block, uint32_t page,
 擦除以 block 为单位。
 
 ```c
+// NAND 块擦除操作：将 block 中所有 page 恢复为全 1 状态
+// 擦除后该 block 的所有 page 可重新编程
+// 返回值：0 成功；非 0 表示擦除失败（需标记为运行时坏块）
 int NAND_EraseBlock(uint32_t block);
 ```
 
@@ -85,11 +93,11 @@ OOB 可以保存：
 
 ```c
 typedef struct {
-    uint32_t magic;
-    uint64_t lba;
-    uint32_t seq;
-    uint16_t valid;
-    uint16_t crc;
+    uint32_t magic;   // 魔数：标识 OOB 数据格式的合法性
+    uint64_t lba;     // 逻辑块地址：掉电恢复时用于 P2L 扫描重建映射表
+    uint32_t seq;     // 写入序列号：确定同一 LBA 多次写入的顺序
+    uint16_t valid;   // 有效标记：0=无效（旧版本），1=有效（最新数据）
+    uint16_t crc;     // CRC 校验：保证 OOB 信息的完整性
 } nand_oob_t;
 ```
 
@@ -106,15 +114,16 @@ NAND 有两类坏块：
 
 ```c
 typedef enum {
-    BLOCK_GOOD = 0,
-    BLOCK_FACTORY_BAD,
-    BLOCK_RUNTIME_BAD,
+    BLOCK_GOOD = 0,       // 正常块：可以正常使用
+    BLOCK_FACTORY_BAD,    // 出厂坏块：芯片出厂时标记，通常 OOB 首字节非 0xFF
+    BLOCK_RUNTIME_BAD,    // 运行时坏块：使用过程中因编程/擦除失败产生的坏块
 } block_health_t;
 
-static block_health_t g_bad_block_table[BLOCK_COUNT];
+static block_health_t g_bad_block_table[BLOCK_COUNT];  // 全局坏块表
 
 int Is_BadBlock(uint32_t block)
 {
+    // 检查指定 block 是否可用：非 BLOCK_GOOD 即为坏块
     return g_bad_block_table[block] != BLOCK_GOOD;
 }
 ```
@@ -133,9 +142,11 @@ NAND 存储会发生 bit flip。ECC 用于检测和纠正错误。
 
 ```c
 typedef enum {
-    ECC_OK,
-    ECC_CORRECTED,
-    ECC_UNCORRECTABLE,
+    ECC_OK,             // ECC 校验通过：数据无错误
+    ECC_CORRECTED,      // ECC 纠正成功：检测到 bit 翻转但已纠正
+                        // 需统计纠正位数，若持续升高则考虑 read reclaim
+    ECC_UNCORRECTABLE,  // ECC 不可纠正：数据已损坏，无法恢复
+                        // 上层需返回错误给 Host 或尝试 RAID 恢复
 } ecc_status_t;
 ```
 
@@ -154,8 +165,11 @@ typedef enum {
 ```c
 void NAND_OnRead(uint32_t block)
 {
+    // 每次读取后递增该 block 的读计数
     g_block_info[block].read_count++;
 
+    // 读干扰处理：当读次数超过阈值时，触发 read reclaim
+    // 将该 block 中的有效数据搬移到新 block，防止 bit flip 累积
     if (g_block_info[block].read_count > READ_RECLAIM_THRESHOLD)
         Schedule_ReadReclaim(block);
 }
@@ -168,12 +182,14 @@ NAND 操作完成后要读状态寄存器判断是否成功。
 ```c
 int NAND_CheckStatus(void)
 {
+    // 读 NAND 状态寄存器，判断上一个操作是否成功
     uint8_t status = NAND_ReadStatus();
 
+    // 检查 FAIL 位：如果置位，表示编程或擦除操作失败
     if (status & NAND_STATUS_FAIL)
-        return -1;
+        return -1;  // 操作失败，上层需标记坏块并迁移数据
 
-    return 0;
+    return 0;       // 操作成功
 }
 ```
 
@@ -185,20 +201,20 @@ int NAND_CheckStatus(void)
 
 ```c
 typedef enum {
-    NAND_REQ_READ,
-    NAND_REQ_PROGRAM,
-    NAND_REQ_ERASE,
+    NAND_REQ_READ,     // NAND 读请求
+    NAND_REQ_PROGRAM,  // NAND 编程请求
+    NAND_REQ_ERASE,    // NAND 擦除请求
 } nand_req_type_t;
 
 typedef struct {
-    nand_req_type_t type;
-    uint16_t ch;
-    uint16_t lun;
-    uint16_t block;
-    uint16_t page;
-    void *data;
-    void *oob;
-    int status;
+    nand_req_type_t type;  // 操作类型（读/编程/擦除）
+    uint16_t ch;           // 目标通道号 (channel)
+    uint16_t lun;          // 目标逻辑单元号 (LUN)
+    uint16_t block;        // 目标块号 (block index)
+    uint16_t page;         // 目标页号（擦除操作时忽略此字段）
+    void *data;            // 数据缓冲区（读：存放读出数据；写：源数据）
+    void *oob;             // OOB 缓冲区（存放或提供 OOB 信息）
+    int status;            // 操作结果：0 成功，非 0 失败
 } nand_req_t;
 ```
 

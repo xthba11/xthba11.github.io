@@ -52,19 +52,19 @@ Host 把命令写入 SQ，然后通知设备；设备处理完成后，把结果
 
 ```c
 typedef enum {
-    HOST_CMD_READ = 0x01,
-    HOST_CMD_WRITE = 0x02,
-    HOST_CMD_FLUSH = 0x03,
-    HOST_CMD_IDENTIFY = 0x04,
+    HOST_CMD_READ     = 0x01,  // 读命令
+    HOST_CMD_WRITE    = 0x02,  // 写命令
+    HOST_CMD_FLUSH    = 0x03,  // 刷写命令：确保写缓存落盘
+    HOST_CMD_IDENTIFY = 0x04,  // 识别命令：获取设备基本信息
 } host_cmd_opcode_t;
 
 typedef struct {
-    uint8_t opcode;
-    uint16_t cid;
-    uint64_t lba;
-    uint32_t nlb;
-    uint64_t data_addr;
-    uint32_t data_len;
+    uint8_t  opcode;      // 命令操作码：对应 host_cmd_opcode_t
+    uint16_t cid;         // 命令 ID：用于匹配 completion entry
+    uint64_t lba;         // 起始逻辑块地址
+    uint32_t nlb;         // 逻辑块数量（通常 1 block = 512B 或 4KB）
+    uint64_t data_addr;   // 数据缓冲区物理地址（DMA 使用的 IOVA 或物理地址）
+    uint32_t data_len;    // 数据长度（字节）
 } host_cmd_t;
 ```
 
@@ -74,9 +74,9 @@ typedef struct {
 
 ```c
 typedef struct {
-    uint16_t cid;
-    uint16_t status;
-    uint32_t result;
+    uint16_t cid;      // 命令 ID：与提交命令的 cid 匹配
+    uint16_t status;   // 完成状态：0 表示成功，非 0 表示错误码
+    uint32_t result;   // 命令特定结果（如 Identify 返回的数据长度）
 } host_cpl_t;
 ```
 
@@ -87,26 +87,28 @@ typedef struct {
 SQ/CQ 通常都是环形队列。
 
 ```c
-#define QUEUE_DEPTH 256
+#define QUEUE_DEPTH 256   // 队列深度：最多 256 个未完成的命令
 
 typedef struct {
-    host_cmd_t entry[QUEUE_DEPTH];
-    uint16_t head;
-    uint16_t tail;
+    host_cmd_t entry[QUEUE_DEPTH];  // 环形缓冲区：存放命令条目
+    uint16_t head;                   // 头指针：设备取命令的位置（由设备更新）
+    uint16_t tail;                   // 尾指针：Host 写入新命令的位置（由 Host 更新）
 } submission_queue_t;
 
 static int SQ_IsFull(submission_queue_t *q)
 {
+    // 环形队列满判断：tail + 1 == head（保留一个空位区分满/空）
     return ((q->tail + 1) % QUEUE_DEPTH) == q->head;
 }
 
 static int SQ_Push(submission_queue_t *q, const host_cmd_t *cmd)
 {
+    // 入队前先检查队列是否已满
     if (SQ_IsFull(q))
-        return -1;
+        return -1;  // 队列已满，无法提交命令
 
-    q->entry[q->tail] = *cmd;
-    q->tail = (q->tail + 1) % QUEUE_DEPTH;
+    q->entry[q->tail] = *cmd;                       // 将命令拷贝到 tail 位置
+    q->tail = (q->tail + 1) % QUEUE_DEPTH;          // 尾指针循环递增
     return 0;
 }
 ```
@@ -127,9 +129,9 @@ Host 下发读写命令前，需要准备数据缓冲区。实际驱动中要考
 
 ```c
 typedef struct {
-    void *vaddr;
-    uint64_t dma_addr;
-    uint32_t size;
+    void *vaddr;          // 虚拟地址：Host 侧程序读写缓冲区时使用
+    uint64_t dma_addr;    // DMA 地址（IOVA 或物理地址）：设备 DMA 传输时使用
+    uint32_t size;        // 缓冲区大小（字节）
 } dma_buffer_t;
 ```
 
@@ -141,20 +143,23 @@ typedef struct {
 ```c
 int Host_SubmitWrite(uint64_t lba, void *buf, uint32_t len)
 {
-    host_cmd_t cmd = {0};
+    host_cmd_t cmd = {0};  // 初始化命令结构体（全零）
 
-    cmd.opcode = HOST_CMD_WRITE;
-    cmd.cid = Alloc_CommandId();
-    cmd.lba = lba;
-    cmd.nlb = len / 4096;
-    cmd.data_addr = Get_DmaAddr(buf);
-    cmd.data_len = len;
+    // 1. 填充命令字段
+    cmd.opcode = HOST_CMD_WRITE;        // 操作码：写命令
+    cmd.cid = Alloc_CommandId();         // 分配唯一命令 ID
+    cmd.lba = lba;                       // 起始逻辑块地址
+    cmd.nlb = len / 4096;                // 逻辑块数量（假设 4KB block size）
+    cmd.data_addr = Get_DmaAddr(buf);    // 获取 DMA 物理地址
+    cmd.data_len = len;                  // 数据长度
 
+    // 2. 将命令写入提交队列 (SQ)
     if (SQ_Push(&g_sq, &cmd) != 0)
-        return -1;
+        return -1;  // 队列已满，提交失败
 
+    // 3. 写 Doorbell 寄存器通知设备有新命令
     Ring_Doorbell();
-    return cmd.cid;
+    return cmd.cid;  // 返回命令 ID，供 completion 匹配
 }
 ```
 
@@ -165,12 +170,14 @@ void Host_PollCompletion(void)
 {
     host_cpl_t cpl;
 
+    // 轮询完成队列 (CQ)，循环处理所有已完成的命令
     while (CQ_Pop(&g_cq, &cpl) == 0) {
         if (cpl.status == 0)
-            On_CommandDone(cpl.cid);
+            On_CommandDone(cpl.cid);              // 命令成功：通知上层
         else
-            On_CommandError(cpl.cid, cpl.status);
+            On_CommandError(cpl.cid, cpl.status); // 命令失败：处理错误码
     }
+    // 高性能场景常用 polling 而非中断，以减少上下文切换开销
 }
 ```
 
@@ -207,11 +214,11 @@ Host 侧要处理：
 
 ```c
 typedef enum {
-    HOST_OK = 0,
-    HOST_ERR_TIMEOUT,
-    HOST_ERR_QUEUE_FULL,
-    HOST_ERR_DMA,
-    HOST_ERR_DEVICE,
+    HOST_OK = 0,              // 成功
+    HOST_ERR_TIMEOUT,         // 超时错误：命令在规定时间内未完成
+    HOST_ERR_QUEUE_FULL,      // 队列已满：SQ 无可用的提交槽位
+    HOST_ERR_DMA,             // DMA 错误：映射失败或传输异常
+    HOST_ERR_DEVICE,          // 设备错误：设备返回非零状态码
 } host_status_t;
 ```
 

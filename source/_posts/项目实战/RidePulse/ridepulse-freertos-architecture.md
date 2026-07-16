@@ -170,16 +170,17 @@ RideTask 建议以 100ms 或 200ms 为周期。
 ```c
 void ride_computer_task(void *argument)
 {
-    ride_computer_init();
+    ride_computer_init();  /* 初始化骑行数据结构和轮速 BSP */
+    /* 向软件看门狗注册，超时 1000ms，任务卡死时触发系统复位 */
     watchdog_register(osal_task_get_current_handle(), 1000, "RideTask");
 
     for (;;) {
-        watchdog_feed(osal_task_get_current_handle());
+        watchdog_feed(osal_task_get_current_handle());  /* 周期喂狗 */
 
-        ride_computer_update(osal_task_get_tick_count());
-        ride_computer_publish_to_ui();
+        ride_computer_update(osal_task_get_tick_count());  /* 读取脉冲，计算速度/里程 */
+        ride_computer_publish_to_ui();   /* 推送数据给 LVGL 接口层 */
 
-        osal_task_delay_ms(100);
+        osal_task_delay_ms(100);  /* 100ms 周期 */
     }
 }
 ```
@@ -221,16 +222,16 @@ st_userqueuecfg_t st_userqueuecfg[Queue_IDX_MAX] =
 
 ```c
 typedef enum {
-    RIDE_EVENT_START = 0,
-    RIDE_EVENT_PAUSE,
-    RIDE_EVENT_RESUME,
-    RIDE_EVENT_STOP,
-    RIDE_EVENT_WHEEL_PULSE,
+    RIDE_EVENT_START = 0,       /* 用户点击开始骑行 */
+    RIDE_EVENT_PAUSE,           /* 用户点击暂停 / 超时无脉冲 */
+    RIDE_EVENT_RESUME,          /* 用户点击恢复 / 再次检测到脉冲 */
+    RIDE_EVENT_STOP,            /* 用户点击结束骑行 */
+    RIDE_EVENT_WHEEL_PULSE,     /* 轮速传感器脉冲到达 */
 } ride_event_type_t;
 
 typedef struct {
-    ride_event_type_t type;
-    uint32_t tick_ms;
+    ride_event_type_t type;     /* 事件类型 */
+    uint32_t tick_ms;           /* 事件发生时的系统 tick */
 } ride_event_t;
 ```
 
@@ -242,14 +243,14 @@ typedef struct {
 
 ```c
 typedef struct {
-    uint32_t start_timestamp;
-    uint32_t end_timestamp;
-    uint32_t distance_m;
-    uint32_t ride_time_s;
-    uint32_t avg_speed_x10_kmh;
-    uint32_t max_speed_x10_kmh;
-    uint16_t avg_heart_rate;
-    uint16_t max_heart_rate;
+    uint32_t start_timestamp;         /* 骑行开始时间戳 (Unix 时间或系统 tick) */
+    uint32_t end_timestamp;           /* 骑行结束时间戳 */
+    uint32_t distance_m;              /* 本次骑行总里程，单位米 */
+    uint32_t ride_time_s;             /* 本次骑行总时长，单位秒 */
+    uint32_t avg_speed_x10_kmh;       /* 平均速度，km/h * 10 */
+    uint32_t max_speed_x10_kmh;       /* 最高速度，km/h * 10 */
+    uint16_t avg_heart_rate;          /* 平均心率 */
+    uint16_t max_heart_rate;          /* 最高心率 */
 } ride_record_t;
 ```
 
@@ -335,11 +336,11 @@ uint32_t last_tick = bsp_wheel_speed_get_last_pulse_tick();
 
 ```c
 typedef struct {
-    uint16_t speed_x10_kmh;
-    uint32_t distance_m;
-    uint32_t ride_time_s;
-    uint16_t heart_rate;
-    uint8_t ride_state;
+    uint16_t speed_x10_kmh;    /* 当前速度，km/h * 10，避免浮点运算 */
+    uint32_t distance_m;       /* 累计里程，单位米 */
+    uint32_t ride_time_s;      /* 骑行时长，单位秒 */
+    uint16_t heart_rate;       /* 当前心率 */
+    uint8_t ride_state;        /* 骑行状态 (RIDE_STATE_IDLE / RIDING / PAUSED / ...) */
 } lvgl_ride_data_t;
 
 void lvgl_ride_data_write(const lvgl_ride_data_t *data);

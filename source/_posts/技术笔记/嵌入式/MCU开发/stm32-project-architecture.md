@@ -61,8 +61,8 @@ top_img: /img/embedded-lab-hero.png
 
 ```bash
 # 如果工程支持 Makefile/CMake，可以先做全量编译
-make clean
-make -j
+make clean   # 清理上次编译产物，避免增量编译残留
+make -j      # 多线程并行编译，加速构建过程
 ```
 
 板端下载后观察串口日志：
@@ -143,22 +143,22 @@ project/
 BSP 只描述板级硬件差异，例如某个 LED 接在哪个 GPIO、某个 UART 用哪个实例、某个传感器的片选脚在哪里。
 
 ```c
-// bsp_board.h
-#define LED_RUN_GPIO_PORT      GPIOC
-#define LED_RUN_GPIO_PIN       GPIO_PIN_13
+// bsp_board.h -- 板级硬件定义，换板子只需改这个文件
+#define LED_RUN_GPIO_PORT      GPIOC          // 运行指示灯所在 GPIO 端口
+#define LED_RUN_GPIO_PIN       GPIO_PIN_13    // 运行指示灯所在引脚编号
 
-#define DEBUG_UART_HANDLE      huart1
-#define SENSOR_SPI_HANDLE      hspi1
+#define DEBUG_UART_HANDLE      huart1         // 调试串口使用 USART1 实例
+#define SENSOR_SPI_HANDLE      hspi1           // 传感器 SPI 使用 SPI1 实例
 ```
 
 ```c
-// bsp_gpio.c
+// bsp_gpio.c -- 板级 GPIO 操作封装，应用层无需关心极性
 void BSP_LED_Set(uint8_t on)
 {
     HAL_GPIO_WritePin(
         LED_RUN_GPIO_PORT,
         LED_RUN_GPIO_PIN,
-        on ? GPIO_PIN_RESET : GPIO_PIN_SET
+        on ? GPIO_PIN_RESET : GPIO_PIN_SET  // 低电平点亮（推挽输出下拉）
     );
 }
 ```
@@ -170,13 +170,14 @@ void BSP_LED_Set(uint8_t on)
 Driver 层封装具体器件或协议。例如温度传感器、电机驱动、串口协议解析。
 
 ```c
+// Driver 层数据结构：封装传感器读数，隐藏寄存器细节
 typedef struct {
-    int16_t temperature_x10;
-    uint16_t humidity_x10;
-    uint8_t valid;
+    int16_t temperature_x10;   // 温度值 ×10（避免浮点，如 256 表示 25.6°C）
+    uint16_t humidity_x10;     // 湿度值 ×10（同上）
+    uint8_t valid;             // 数据有效标志位：1=有效，0=传感器未就绪
 } sensor_data_t;
 
-int Sensor_Read(sensor_data_t *out);
+int Sensor_Read(sensor_data_t *out); // 读取传感器数据，返回 0 表示成功
 ```
 
 好的驱动接口要避免泄漏硬件细节。应用层不应该知道传感器内部寄存器地址，也不应该直接拼 SPI 命令。
@@ -186,15 +187,16 @@ int Sensor_Read(sensor_data_t *out);
 Middleware 放可复用组件，例如环形缓冲区、CRC、日志系统、命令行解析器。
 
 ```c
+// Middleware 层：环形缓冲区，不依赖 HAL，可在 PC 上单元测试
 typedef struct {
-    uint8_t *buf;
-    uint16_t size;
-    uint16_t read;
-    uint16_t write;
+    uint8_t *buf;      // 缓冲区首地址指针
+    uint16_t size;     // 缓冲区总容量（字节数）
+    uint16_t read;     // 读指针位置（消费者从此处取数据）
+    uint16_t write;    // 写指针位置（生产者从此处写数据）
 } ring_buffer_t;
 
-uint16_t RingBuffer_Write(ring_buffer_t *rb, const uint8_t *data, uint16_t len);
-uint16_t RingBuffer_Read(ring_buffer_t *rb, uint8_t *out, uint16_t len);
+uint16_t RingBuffer_Write(ring_buffer_t *rb, const uint8_t *data, uint16_t len); // 写入数据，返回实际写入字节数
+uint16_t RingBuffer_Read(ring_buffer_t *rb, uint8_t *out, uint16_t len);         // 读取数据，返回实际读出字节数
 ```
 
 这类代码尽量不要依赖 HAL，方便在 PC 上做单元测试。
@@ -206,20 +208,25 @@ uint16_t RingBuffer_Read(ring_buffer_t *rb, uint8_t *out, uint16_t len);
 ```c
 int main(void)
 {
-    HAL_Init();
-    SystemClock_Config();
-    MX_GPIO_Init();
-    MX_USART1_UART_Init();
-    MX_TIM2_Init();
+    // 第1步：HAL 库和系统时钟初始化
+    HAL_Init();                   // HAL 库全局初始化（SysTick、中断优先级分组）
+    SystemClock_Config();         // 配置系统时钟树（PLL、AHB、APB 总线时钟）
 
-    BSP_Init();
-    Log_Init();
-    App_Init();
+    // 第2步：外设初始化（由 CubeMX 自动生成）
+    MX_GPIO_Init();               // GPIO 引脚初始化（输入/输出/复用）
+    MX_USART1_UART_Init();        // 调试串口初始化（波特率、数据位、停止位）
+    MX_TIM2_Init();               // 定时器 2 初始化（用于周期中断或 PWM）
 
+    // 第3步：各层模块初始化
+    BSP_Init();                   // 板级支持包初始化（LED、按键、片选引脚）
+    Log_Init();                   // 日志系统初始化（串口输出通道就绪）
+    App_Init();                   // 应用层初始化（状态机、任务创建等）
+
+    // 第4步：主循环——轮询调度各模块
     while (1) {
-        App_Poll();
-        Log_Poll();
-        Watchdog_Feed();
+        App_Poll();               // 应用层周期处理（状态机轮转、数据刷新）
+        Log_Poll();               // 日志异步输出（缓冲区刷出到串口）
+        Watchdog_Feed();          // 喂狗——防止看门狗超时复位
     }
 }
 ```
@@ -231,13 +238,14 @@ int main(void)
 不要让每个模块随手返回 `0/-1`，建议定义统一错误码。
 
 ```c
+// 统一错误码枚举：所有模块使用同一套返回值，方便日志和错误处理
 typedef enum {
-    ERR_OK = 0,
-    ERR_TIMEOUT = -1,
-    ERR_INVALID_PARAM = -2,
-    ERR_NO_MEMORY = -3,
-    ERR_HW_FAULT = -4,
-    ERR_BUSY = -5,
+    ERR_OK = 0,              // 操作成功完成
+    ERR_TIMEOUT = -1,        // 操作超时（通信等待、信号量等待等）
+    ERR_INVALID_PARAM = -2,  // 参数非法（空指针、越界、格式错误）
+    ERR_NO_MEMORY = -3,      // 内存不足（malloc 失败或缓冲池耗尽）
+    ERR_HW_FAULT = -4,       // 硬件故障（传感器无应答、短路保护触发）
+    ERR_BUSY = -5,           // 设备忙（正在处理上一条命令、DMA 未完成）
 } error_t;
 ```
 
@@ -248,10 +256,11 @@ typedef enum {
 嵌入式日志要控制成本。建议至少分级：
 
 ```c
-#define LOGE(fmt, ...) Log_Print("E", __FILE__, __LINE__, fmt, ##__VA_ARGS__)
-#define LOGW(fmt, ...) Log_Print("W", __FILE__, __LINE__, fmt, ##__VA_ARGS__)
-#define LOGI(fmt, ...) Log_Print("I", __FILE__, __LINE__, fmt, ##__VA_ARGS__)
-#define LOGD(fmt, ...) Log_Print("D", __FILE__, __LINE__, fmt, ##__VA_ARGS__)
+// 日志分级宏：自动附带级别、文件名和行号，便于定位问题
+#define LOGE(fmt, ...) Log_Print("E", __FILE__, __LINE__, fmt, ##__VA_ARGS__) // Error：严重错误，必须处理
+#define LOGW(fmt, ...) Log_Print("W", __FILE__, __LINE__, fmt, ##__VA_ARGS__) // Warning：异常但可继续运行
+#define LOGI(fmt, ...) Log_Print("I", __FILE__, __LINE__, fmt, ##__VA_ARGS__) // Info：关键状态切换或启动信息
+#define LOGD(fmt, ...) Log_Print("D", __FILE__, __LINE__, fmt, ##__VA_ARGS__) // Debug：调试信息，生产版本可关闭
 ```
 
 生产版本可以关闭 `LOGD`，保留关键错误和状态切换。
@@ -267,12 +276,14 @@ typedef enum {
 不要在中断里做复杂解析、长时间循环、阻塞式串口打印。
 
 ```c
-volatile uint8_t uart_rx_event = 0;
+// 中断处理原则：只投递事件，不在中断里做复杂处理
+volatile uint8_t uart_rx_event = 0;  // 串口接收完成标志，主循环轮询此标志
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
+    // 判断是调试串口触发的接收完成中断
     if (huart == &huart1) {
-        uart_rx_event = 1;
+        uart_rx_event = 1;  // 只设置标志位，真正的协议解析交给主循环
     }
 }
 ```

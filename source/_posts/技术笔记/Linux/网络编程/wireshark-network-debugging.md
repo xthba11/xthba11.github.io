@@ -21,13 +21,13 @@ top_img: /img/embedded-lab-hero.png
 ## 1. 安装与启动
 
 ```bash
-# Ubuntu / Debian
+# Ubuntu / Debian 系统安装 Wireshark
 sudo apt install wireshark
 
-# CentOS / RHEL
+# CentOS / RHEL 系统安装 Wireshark
 sudo yum install wireshark
 
-# 启动（需要 root 权限）
+# 启动 Wireshark GUI（需要 root 权限才能抓包）
 sudo wireshark &
 ```
 
@@ -35,37 +35,39 @@ sudo wireshark &
 
 ### 抓取所有流量
 ```bash
+# 抓取 eth0 网卡的所有流量并保存到 capture.pcap 文件
 sudo tcpdump -i eth0 -w capture.pcap
 ```
 
 ### 抓取特定端口
 ```bash
-# 抓取 80 端口 HTTP 流量
+# 只抓取 80 端口的 HTTP 流量，保存到 http.pcap
 sudo tcpdump -i eth0 port 80 -w http.pcap
 
-# 抓取 8080 端口
+# 只抓取 8080 端口的应用流量，保存到 app.pcap
 sudo tcpdump -i eth0 port 8080 -w app.pcap
 ```
 
 ### 抓取特定 IP
 ```bash
-# 抓取与 192.168.1.100 通信的包
+# 只抓取与 192.168.1.100 通信的所有包（双向），保存到 target.pcap
 sudo tcpdump -i eth0 host 192.168.1.100 -w target.pcap
 
-# 抓取源或目标为指定 IP
+# 只抓取源 IP 为 192.168.1.100 的包（发出的方向）
 sudo tcpdump -i eth0 src 192.168.1.100
+# 只抓取目标 IP 为 192.168.1.100 的包（收到的方向）
 sudo tcpdump -i eth0 dst 192.168.1.100
 ```
 
 ### 抓取 TCP/UDP
 ```bash
-# TCP
+# 只抓取 TCP 协议流量，保存到 tcp.pcap
 sudo tcpdump -i eth0 tcp -w tcp.pcap
 
-# UDP
+# 只抓取 UDP 协议流量，保存到 udp.pcap
 sudo tcpdump -i eth0 udp -w udp.pcap
 
-# 组合条件
+# 组合条件：抓取 TCP 80 端口或 UDP 53 端口（HTTP 或 DNS）的流量
 sudo tcpdump -i eth0 'tcp port 80 or udp port 53' -w net.pcap
 ```
 
@@ -75,10 +77,11 @@ sudo tcpdump -i eth0 'tcp port 80 or udp port 53' -w net.pcap
 
 ### 捕获过滤器（抓包前）
 ```bash
-# 语法：proto [expr:size]
-tcp port 8080
-host 192.168.1.100
-net 192.168.1.0/24
+# 捕获过滤器语法：用于 tcpdump / Wireshark 抓包前过滤
+# 格式：proto [expr:size]
+tcp port 8080                 # 只捕获 TCP 8080 端口的包
+host 192.168.1.100            # 只捕获与指定 IP 通信的包
+net 192.168.1.0/24            # 只捕获指定子网的包
 ```
 
 ### 显示过滤器（抓包后）
@@ -247,7 +250,10 @@ Statistics -> Protocol Hierarchy
 | `-r` | 读取文件 |
 
 ```bash
-# 实战例子：抓取 HTTP 请求和响应
+# 实战例子：通过匹配 TCP 载荷的前 4 字节来抓取 HTTP 请求和响应
+# -nn: 不解析域名和端口名（加速显示）
+# -v: 详细输出
+# 0x47455420 = "GET " , 0x48545450 = "HTTP" —— 匹配 HTTP 请求和响应的开头
 sudo tcpdump -i eth0 -nn -v 'tcp port 80 and (tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x47455420 or tcp[((tcp[12:1] & 0xf0) >> 2):4] = 0x48545450)'
 ```
 

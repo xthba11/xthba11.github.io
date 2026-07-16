@@ -104,22 +104,29 @@ Engine ECU 示例：
 import time
 import can
 
+# 创建 SocketCAN 接口，连接到 vcan0
 bus = can.interface.Bus(channel="vcan0", interface="socketcan")
 
 def build_engine_frame(rpm, speed, coolant):
+    """构造 Engine ECU CAN 帧 (ID=0x100)，将物理值编码为字节数组"""
+    # 转速编码：rpm = raw * 0.25，所以 raw = rpm / 0.25
     raw_rpm = int(rpm / 0.25)
+    # 水温编码：coolant = raw - 40，所以 raw = coolant + 40
     raw_coolant = int(coolant + 40)
 
+    # 数据布局：Byte0-1=转速(低字节在前)，Byte2=车速，Byte3=水温，剩余填充0
     data = [
-        raw_rpm & 0xFF,
-        (raw_rpm >> 8) & 0xFF,
-        int(speed) & 0xFF,
-        raw_coolant & 0xFF,
-        0, 0, 0, 0,
+        raw_rpm & 0xFF,          # 转速低字节
+        (raw_rpm >> 8) & 0xFF,   # 转速高字节
+        int(speed) & 0xFF,       # 车速（1 字节，范围 0~255 km/h）
+        raw_coolant & 0xFF,      # 水温（偏移后）
+        0, 0, 0, 0,              # 填充字节
     ]
 
+    # 构造标准帧（非扩展帧），仲裁 ID = 0x100
     return can.Message(arbitration_id=0x100, data=data, is_extended_id=False)
 
+# 周期发送：每 100ms 发送一帧
 while True:
     msg = build_engine_frame(rpm=1600, speed=60, coolant=46)
     bus.send(msg)
@@ -132,11 +139,14 @@ Body ECU 示例：
 
 ```python
 def build_body_frame(door_l=False, door_r=False, left_turn=False, right_turn=False, gear=3):
+    """构造 Body ECU CAN 帧 (ID=0x101)，将开关量和档位编码为字节数组"""
+    # 使用位掩码将 4 个开关量打包到 Byte0
     flags = 0
-    flags |= int(door_l) << 0
-    flags |= int(door_r) << 1
-    flags |= int(left_turn) << 2
-    flags |= int(right_turn) << 3
+    flags |= int(door_l) << 0       # bit0：左前门（0=关, 1=开）
+    flags |= int(door_r) << 1       # bit1：右前门（0=关, 1=开）
+    flags |= int(left_turn) << 2    # bit2：左转向灯（0=关, 1=开）
+    flags |= int(right_turn) << 3   # bit3：右转向灯（0=关, 1=开）
+    # 数据布局：Byte0=开关量标志位，Byte1=档位(0=P,1=R,2=N,3=D)，剩余填充0
     return can.Message(arbitration_id=0x101, data=[flags, gear, 0, 0, 0, 0, 0, 0], is_extended_id=False)
 ```
 
@@ -145,50 +155,55 @@ def build_body_frame(door_l=False, door_r=False, left_turn=False, right_turn=Fal
 解析函数尽量保持纯函数形式，方便测试：
 
 ```cpp
+// 解析后的信号值结构
 struct SignalValue {
-    std::string name;
-    double value = 0.0;
-    std::string unit;
+    std::string name;      // 信号名称
+    double value = 0.0;    // 物理值
+    std::string unit;      // 物理单位
 };
 
+// 根据 CAN ID 将原始字节解析为物理信号值
 std::vector<SignalValue> SignalParser::parse(const CanFrame& frame)
 {
     std::vector<SignalValue> out;
 
     switch (frame.can_id) {
-    case 0x100: {
+    case 0x100: {  // Engine ECU：转速、车速、水温
+        // 转速：Byte0 低字节 + Byte1 高字节，因子 0.25
         std::uint16_t raw_rpm = frame.data[0] | (frame.data[1] << 8);
         double rpm = raw_rpm * 0.25;
-        double speed = frame.data[2];
-        double coolant = frame.data[3] - 40;
+        double speed = frame.data[2];           // 车速：直接取值
+        double coolant = frame.data[3] - 40;    // 水温：偏移 -40
 
         out.push_back({"engine_rpm", rpm, "rpm"});
         out.push_back({"vehicle_speed", speed, "km/h"});
         out.push_back({"coolant_temp", coolant, "C"});
         break;
     }
-    case 0x101: {
+    case 0x101: {  // Body ECU：车门、转向灯、档位
         std::uint8_t flags = frame.data[0];
+        // 按位提取开关量（bit0~bit3）
         out.push_back({"left_front_door", double((flags >> 0) & 1), ""});
         out.push_back({"right_front_door", double((flags >> 1) & 1), ""});
         out.push_back({"left_turn_signal", double((flags >> 2) & 1), ""});
         out.push_back({"right_turn_signal", double((flags >> 3) & 1), ""});
-        out.push_back({"gear", double(frame.data[1]), ""});
+        out.push_back({"gear", double(frame.data[1]), ""});  // Byte1：档位
         break;
     }
-    case 0x102: {
+    case 0x102: {  // BMS ECU：电池电压、电池温度
+        // 电压：Byte0 低字节 + Byte1 高字节，因子 0.1
         std::uint16_t raw_voltage = frame.data[0] | (frame.data[1] << 8);
         out.push_back({"battery_voltage", raw_voltage * 0.1, "V"});
         out.push_back({"battery_temp", double(frame.data[2] - 40), "C"});
         break;
     }
-    case 0x200: {
+    case 0x200: {  // Diagnosis ECU：DTC 故障码
         std::uint16_t dtc = frame.data[0] | (frame.data[1] << 8);
         out.push_back({"dtc_code", double(dtc), ""});
         break;
     }
     default:
-        break;
+        break;  // 未识别的 CAN ID，忽略
     }
 
     return out;
@@ -248,16 +263,18 @@ python3 simulator/fault_injector.py --type dtc
 每类 ECU 的报文都有周期。状态管理模块可以记录最后一次收到该 ECU 报文的时间：
 
 ```cpp
+// ECU 在线状态跟踪
 struct EcuStatus {
-    bool online = false;
-    std::uint64_t last_seen_ms = 0;
-    std::uint64_t timeout_ms = 1000;
+    bool online = false;                  // 当前是否在线
+    std::uint64_t last_seen_ms = 0;       // 最后一次收到该 ECU 报文的时间戳
+    std::uint64_t timeout_ms = 1000;      // 超时阈值（毫秒），超过此时间未收到报文视为离线
 };
 ```
 
 判断逻辑：
 
 ```cpp
+// 定时检查：超过超时时间未收到报文则标记该 ECU 离线
 if (now_ms - engine.last_seen_ms > engine.timeout_ms) {
     engine.online = false;
 }
