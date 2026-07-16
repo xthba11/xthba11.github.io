@@ -9,6 +9,40 @@ top_img: /img/embedded-lab-hero.png
 
 这里整理我计划持续完善的嵌入式与系统编程项目。每个项目都会尽量补齐需求背景、硬件连接、软件架构、核心代码、调试记录和后续优化。
 
+## RidePulse：STM32 自行车码表
+
+### 项目背景
+
+RidePulse 是一个基于 STM32F411、FreeRTOS 和 LVGL 的自行车码表项目。它不是从空白工程开始，而是由我之前做的一套智能手表固件改造而来。
+
+原工程已经具备 LVGL 显示、触摸交互、传感器采集、外部 Flash、LittleFS、OTA、低功耗和看门狗能力。因此这个项目的重点，是在已有穿戴设备工程基础上，补齐自行车码表真正需要的骑行数据链路：轮速采集、速度计算、里程累计、骑行状态机、码表 UI 和骑行记录保存。
+
+### 当前状态
+
+- 已完成：STM32F411 基础工程、FreeRTOS 任务框架、LVGL 显示任务、传感器服务、外部 Flash、LittleFS、OTA、低功耗、软件/硬件看门狗。
+- 改造中：轮速霍尔传感器输入、RideTask、速度/里程计算、码表主页面。
+- 计划补充：骑行历史记录页面、轮径设置、自动暂停/恢复、断电恢复、更多骑行数据统计。
+
+### 技术栈
+
+| 模块 | 内容 |
+|------|------|
+| MCU | STM32F411 |
+| RTOS | FreeRTOS |
+| GUI | LVGL |
+| 存储 | 外部 Flash + LittleFS |
+| 升级 | USART + Ymodem OTA |
+| 传感器 | 轮速霍尔、心率、气压、温湿度、MPU6050 |
+| 可靠性 | 低功耗状态机、软件看门狗、硬件 IWDG |
+
+### 系列文章
+
+- [项目总览：从智能手表固件到骑行终端](/2026/07/16/项目实战/RidePulse/ridepulse-project-overview/)
+- [FreeRTOS 任务划分：显示、传感器、存储、OTA 与看门狗](/2026/07/16/项目实战/RidePulse/ridepulse-freertos-architecture/)
+- [轮速采集：霍尔传感器、EXTI 中断与速度里程计算](/2026/07/16/项目实战/RidePulse/ridepulse-wheel-speed-distance/)
+- [LVGL 码表主界面：速度大数字、骑行时间、里程和心率刷新](/2026/07/16/项目实战/RidePulse/ridepulse-lvgl-bike-ui/)
+- [LittleFS 骑行记录：外部 Flash 文件系统在 STM32 码表中的应用](/2026/07/16/项目实战/RidePulse/ridepulse-littlefs-ride-record/)
+
 ## myTCP：轻量级 TCP 学习协议栈
 
 ### 项目定位
