@@ -12,7 +12,8 @@ tags:
   - 自行车码表
   - 骑行记录
 description: 基于现有外部 Flash 和 LittleFS 移植，为 RidePulse 自行车码表设计骑行记录结构体、保存流程、历史记录读取和断电保护策略。
-top_img: /img/covers/ridepulse-cover.svg
+cover: /img/covers/articles/ridepulse-littlefs-ride-record.svg
+top_img: /img/covers/articles/ridepulse-littlefs-ride-record.svg
 ---
 
 码表如果只能显示当前速度和里程，它更像一个实时仪表。加入骑行记录后，项目才更像完整设备：每次骑行结束后，可以保存总里程、骑行时间、平均速度、最大速度、心率等摘要，后续在历史页面查看。

@@ -206,6 +206,116 @@ body {
   color: var(--xthba-muted);
 }
 
+.post-shelf-panel {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border: 1px solid var(--xthba-line);
+  border-radius: 8px;
+  background: var(--xthba-surface);
+  box-shadow: 0 14px 38px rgba(17, 34, 40, 0.08);
+}
+
+.post-shelf-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.post-shelf-panel__title {
+  color: var(--xthba-text);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.post-shelf-panel__count {
+  min-width: 28px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(0, 166, 166, 0.12);
+  color: var(--xthba-teal-dark);
+  font-size: 0.86rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+.post-shelf-panel__tip {
+  margin: 8px 0 0;
+  color: var(--xthba-muted);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.post-shelf-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.post-shelf-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 166, 166, 0.12);
+  border-radius: 6px;
+  background: rgba(0, 166, 166, 0.05);
+}
+
+.post-shelf-list__title {
+  overflow: hidden;
+  color: var(--xthba-text);
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.post-shelf-off-btn,
+.post-shelf-on-btn {
+  border: 1px solid rgba(0, 166, 166, 0.24);
+  border-radius: 6px;
+  background: rgba(0, 166, 166, 0.08);
+  color: var(--xthba-teal-dark);
+  cursor: pointer;
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1;
+  transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.post-shelf-off-btn {
+  margin-top: 14px;
+  padding: 8px 11px;
+}
+
+.post-shelf-on-btn {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+}
+
+.post-shelf-off-btn:hover,
+.post-shelf-on-btn:hover {
+  border-color: rgba(0, 166, 166, 0.42);
+  background: rgba(0, 166, 166, 0.16);
+  transform: translateY(-1px);
+}
+
+.post-shelf-hidden {
+  display: none !important;
+}
+
+.post-shelf-empty-page {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  border: 1px dashed rgba(0, 166, 166, 0.28);
+  border-radius: 8px;
+  background: rgba(0, 166, 166, 0.06);
+  color: var(--xthba-muted);
+  font-weight: 700;
+  text-align: center;
+}
+
 #aside-content .card-widget {
   overflow: hidden;
 }

@@ -12,7 +12,8 @@ tags:
   - 坏块管理
   - C语言
 description: NAND Flash 基础：page/block 结构、读写擦约束、坏块管理、ECC、OOB 和常见可靠性问题。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/nand-flash-basics.svg
+top_img: /img/covers/articles/nand-flash-basics.svg
 ---
 
 理解 eSSD 固件必须先理解 NAND Flash。NAND 的行为和普通 RAM、NOR Flash 都不一样，它有严格的编程和擦除约束，也有坏块、位翻转、读干扰等可靠性问题。

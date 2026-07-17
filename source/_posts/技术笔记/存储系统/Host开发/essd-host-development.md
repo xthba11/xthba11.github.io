@@ -12,7 +12,8 @@ tags:
   - 性能测试
   - C语言
 description: eSSD Host 侧开发入门：命令队列模型、提交/完成路径、DMA 缓冲区、性能测试和错误处理。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/essd-host-development.svg
+top_img: /img/covers/articles/essd-host-development.svg
 ---
 
 学习 eSSD 不能只看固件侧。Host 侧开发同样重要，因为 SSD 的行为最终要通过 Host 命令、队列、DMA 和性能测试体现出来。

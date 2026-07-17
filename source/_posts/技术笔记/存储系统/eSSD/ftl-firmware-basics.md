@@ -13,7 +13,8 @@ tags:
   - 垃圾回收
   - C语言
 description: FTL 核心机制学习：逻辑地址到物理地址映射、无效页、垃圾回收、磨损均衡和写放大。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/ftl-firmware-basics.svg
+top_img: /img/covers/articles/ftl-firmware-basics.svg
 ---
 
 FTL，全称 Flash Translation Layer，是 SSD 固件中最核心的模块之一。Host 看到的是连续 LBA，而 NAND Flash 只能按 page 写、按 block 擦，不能像磁盘一样原地覆盖。

@@ -12,7 +12,8 @@ tags:
   - 传感器驱动
   - C语言
 description: SPI 设备驱动学习：设备树、spi_driver、spi_sync、片选、mode、speed 和寄存器读写。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/linux-spi-driver.svg
+top_img: /img/covers/articles/linux-spi-driver.svg
 ---
 
 SPI 常用于高速或中速外设，例如 Flash、ADC、显示屏、无线模块和部分传感器。相比 I2C，SPI 没有设备地址，依赖片选信号区分设备。

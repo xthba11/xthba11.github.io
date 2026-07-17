@@ -12,7 +12,8 @@ tags:
   - TCP
   - socket
 description: 用 C 语言实现一个 epoll TCP 服务端，理解非阻塞 socket、事件循环、连接管理和常见错误处理。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/c-socket-epoll-server.svg
+top_img: /img/covers/articles/c-socket-epoll-server.svg
 ---
 
 在 Linux 网络编程中，`epoll` 是实现高并发 TCP 服务端的常用机制。它的核心思想是：把大量 fd 交给内核监控，应用层只处理真正发生事件的连接。

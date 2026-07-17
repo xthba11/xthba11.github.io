@@ -12,7 +12,8 @@ tags:
   - 队列
   - 事件组
 description: FreeRTOS 工程中的任务划分、优先级设计、队列、事件组、任务通知和常见调试方法。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/freertos-task-design.svg
+top_img: /img/covers/articles/freertos-task-design.svg
 ---
 
 FreeRTOS 的难点不在于创建任务，而在于任务怎么拆、优先级怎么定、任务之间怎么通信。

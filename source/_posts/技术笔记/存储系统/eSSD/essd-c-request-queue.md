@@ -13,7 +13,8 @@ tags:
   - 状态机
   - 固件架构
 description: 用 C 语言实现 eSSD 固件中常见的请求队列和状态机框架，理解 Host IO、FTL 和 NAND 请求如何流转。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/essd-c-request-queue.svg
+top_img: /img/covers/articles/essd-c-request-queue.svg
 ---
 
 eSSD 固件里充满队列和状态机。Host 命令进来后，通常会被拆成内部请求，再进入 FTL、NAND、DMA 等多个阶段。

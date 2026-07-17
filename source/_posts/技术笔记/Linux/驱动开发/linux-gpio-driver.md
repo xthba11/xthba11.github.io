@@ -12,7 +12,8 @@ tags:
   - 按键驱动
   - C语言
 description: Linux GPIO 子系统学习：gpiod API、LED 控制、按键输入、中断和消抖处理。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/linux-gpio-driver.svg
+top_img: /img/covers/articles/linux-gpio-driver.svg
 ---
 
 GPIO 是嵌入式 Linux 驱动开发中最常接触的资源。LED、按键、复位脚、片选脚、电源使能脚，本质上都离不开 GPIO。

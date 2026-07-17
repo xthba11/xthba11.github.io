@@ -12,7 +12,8 @@ tags:
   - 设备树
   - C语言
 description: platform driver 和设备树的最小闭环：compatible 匹配、probe/remove、资源获取和驱动调试。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/linux-platform-driver-devicetree.svg
+top_img: /img/covers/articles/linux-platform-driver-devicetree.svg
 ---
 
 在嵌入式 Linux 中，很多片上外设都不是通过 USB/PCI 这类可枚举总线发现的，而是由板级描述告诉内核：这里有一个设备、寄存器地址是多少、中断号是多少、GPIO 接在哪里。

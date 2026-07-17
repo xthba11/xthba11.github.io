@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="C 语言网络编程：epoll 服务端最小实践">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071b22"/><stop offset="1" stop-color="#05080a"/></linearGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#38bdf8" stroke-opacity="0.075" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1034" cy="92" r="198" fill="#38bdf8" opacity="0.105"/>
+  <circle cx="128" cy="572" r="236" fill="#2dd4bf" opacity="0.08"/>
+  <rect x="64" y="74" width="1072" height="482" rx="28" fill="#ffffff" opacity="0.042" stroke="#ffffff" stroke-opacity="0.14"/>
+  <text x="88" y="140" font-family="Inter, 'Noto Sans SC', Arial, sans-serif" font-size="27" font-weight="800" fill="#2dd4bf" letter-spacing="1.5">Network</text>
+  <text font-family="Inter, 'Noto Sans SC', Arial, sans-serif" font-size="38" font-weight="850" fill="#f0fdff" letter-spacing="0"><tspan x="88" y="230">C 语言网络编程：</tspan><tspan x="88" y="282">epoll 服务端最小实践</tspan></text>
+  <path d="M88 430 H470" stroke="#38bdf8" stroke-width="8" stroke-linecap="round"/>
+  <text x="88" y="486" font-family="JetBrains Mono, Consolas, monospace" font-size="20" fill="#f0fdff" opacity="0.74">c-socket-epoll-server</text>
+  <g transform="translate(800,180)"><circle cx="90" cy="92" r="36" stroke="#38bdf8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="246" cy="92" r="36" stroke="#38bdf8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="168" cy="222" r="36" stroke="#38bdf8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M126 92h84M106 124l44 70M230 124l-44 70" stroke="#2dd4bf" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M70 282h204" stroke="#38bdf8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.55"/></g>
+  <path d="M790 474 C880 522 1002 520 1102 456" fill="none" stroke="#2dd4bf" stroke-width="7" stroke-linecap="round" opacity="0.48"/>
+</svg>

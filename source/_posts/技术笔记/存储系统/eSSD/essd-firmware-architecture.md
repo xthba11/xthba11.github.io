@@ -12,7 +12,8 @@ tags:
   - NAND Flash
   - C语言
 description: eSSD 固件整体架构学习：Host 接口、命令调度、FTL、NAND 管理、后台任务和异常恢复。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/essd-firmware-architecture.svg
+top_img: /img/covers/articles/essd-firmware-architecture.svg
 ---
 
 eSSD 固件可以理解为运行在 SSD 控制器上的嵌入式系统。它一边响应 Host 的读写命令，一边管理 NAND Flash 的擦写寿命、坏块、映射表、GC 和掉电保护。

@@ -13,7 +13,8 @@ tags:
   - J-Link
   - SWD
 description: MCU 调试技术详解：J-Link、SWD、串口调试、printf 重定向
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/mcu-debugging-guide.svg
+top_img: /img/covers/articles/mcu-debugging-guide.svg
 ---
 
 # MCU开发专题：调试技术详解

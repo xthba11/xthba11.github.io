@@ -13,7 +13,8 @@ tags:
   - V4L2
   - 车道线检测
 description: 在 RK3568 车载网关项目中使用 OpenCV 支持视频文件和 USB 摄像头输入，并通过 ROI、Canny、HoughLinesP 实现第一版轻量级车道线检测。
-top_img: /img/covers/linux-driver-cover.svg
+cover: /img/covers/articles/rk3568-opencv-video-lane-detection.svg
+top_img: /img/covers/articles/rk3568-opencv-video-lane-detection.svg
 ---
 
 CAN 网关只能说明系统能采集车辆状态，但车道偏离预警还需要视觉输入。

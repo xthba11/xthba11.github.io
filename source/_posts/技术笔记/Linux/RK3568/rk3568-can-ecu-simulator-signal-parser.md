@@ -13,7 +13,8 @@ tags:
   - Python
   - CAN解析
 description: 使用 Python 模拟 Engine ECU、Body ECU、BMS ECU 和 Diagnosis ECU 周期发送 CAN 报文，并在 C++ 网关中解析车速、转速、水温、电压、档位、车门、转向灯和故障码。
-top_img: /img/covers/network-cover.svg
+cover: /img/covers/articles/rk3568-can-ecu-simulator-signal-parser.svg
+top_img: /img/covers/articles/rk3568-can-ecu-simulator-signal-parser.svg
 ---
 
 前两篇文章完成了 `vcan` 环境和 SocketCAN 接收转发。这一篇开始让网关的数据变得像“车”。

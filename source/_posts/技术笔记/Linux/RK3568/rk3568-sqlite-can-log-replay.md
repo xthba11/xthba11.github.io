@@ -13,7 +13,8 @@ tags:
   - CAN回放
   - 数据记录
 description: 为 RK3568 车载网关设计 SQLite 数据表，保存 CAN 原始帧、车辆信号、车道检测状态和告警记录，并实现按时间间隔回放 CAN 报文用于故障复现。
-top_img: /img/covers/linux-driver-cover.svg
+cover: /img/covers/articles/rk3568-sqlite-can-log-replay.svg
+top_img: /img/covers/articles/rk3568-sqlite-can-log-replay.svg
 ---
 
 前面几篇文章已经有了 CAN 输入、信号解析和车道线检测。接下来要做数据记录。

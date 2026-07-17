@@ -12,7 +12,8 @@ tags:
   - UI
   - 嵌入式显示
 description: 在现有 STM32 智能手表工程中新增自行车码表 UI，设计 LVGL 数据接口、码表主界面、刷新周期和 UI 与业务层解耦方式。
-top_img: /img/covers/ridepulse-cover.svg
+cover: /img/covers/articles/ridepulse-lvgl-bike-ui.svg
+top_img: /img/covers/articles/ridepulse-lvgl-bike-ui.svg
 ---
 
 前面已经设计了轮速采集和 RideTask。现在要把骑行数据显示到屏幕上。

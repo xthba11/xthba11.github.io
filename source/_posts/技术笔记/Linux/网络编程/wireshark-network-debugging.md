@@ -13,7 +13,8 @@ tags:
   - tcpdump
   - 网络调试
 description: Wireshark 使用指南：抓包、过滤、分析TCP/UDP/HTTP流量
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/wireshark-network-debugging.svg
+top_img: /img/covers/articles/wireshark-network-debugging.svg
 ---
 
 # Linux 网络开发专题：Wireshark 使用指南

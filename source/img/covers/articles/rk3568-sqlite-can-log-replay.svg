@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="RK3568 车载网关实验五：SQLite 数据记录与 CAN 报文回放">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#071629"/><stop offset="1" stop-color="#05090f"/></linearGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#4da3ff" stroke-opacity="0.075" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1034" cy="92" r="198" fill="#4da3ff" opacity="0.105"/>
+  <circle cx="128" cy="572" r="236" fill="#31d6a5" opacity="0.08"/>
+  <rect x="64" y="74" width="1072" height="482" rx="28" fill="#ffffff" opacity="0.042" stroke="#ffffff" stroke-opacity="0.14"/>
+  <text x="88" y="140" font-family="Inter, 'Noto Sans SC', Arial, sans-serif" font-size="27" font-weight="800" fill="#31d6a5" letter-spacing="1.5">RK3568</text>
+  <text font-family="Inter, 'Noto Sans SC', Arial, sans-serif" font-size="38" font-weight="850" fill="#f4f8ff" letter-spacing="0"><tspan x="88" y="230">RK3568 车载网关实验五：</tspan><tspan x="88" y="282">SQLite 数据记录与 CAN 报文回放</tspan></text>
+  <path d="M88 430 H470" stroke="#4da3ff" stroke-width="8" stroke-linecap="round"/>
+  <text x="88" y="486" font-family="JetBrains Mono, Consolas, monospace" font-size="20" fill="#f4f8ff" opacity="0.74">rk3568-sqlite-can-log-replay</text>
+  <g transform="translate(792,190)"><path d="M48 112h284M90 72v80M170 72v80M250 72v80" stroke="#4da3ff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="28" y="36" width="84" height="64" rx="14" stroke="#31d6a5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="132" y="152" width="84" height="64" rx="14" stroke="#31d6a5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><rect x="236" y="36" width="84" height="64" rx="14" stroke="#31d6a5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M72 274h232" stroke="#4da3ff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.55"/><path d="M112 250l-36 24 36 24M264 250l36 24-36 24" stroke="#31d6a5" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+  <path d="M790 474 C880 522 1002 520 1102 456" fill="none" stroke="#31d6a5" stroke-width="7" stroke-linecap="round" opacity="0.48"/>
+</svg>

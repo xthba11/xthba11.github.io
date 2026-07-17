@@ -13,7 +13,8 @@ tags:
   - BSP
   - HAL
 description: 如何组织一个可维护的 STM32 工程：目录结构、BSP、驱动层、应用层、日志和错误处理。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/stm32-project-architecture.svg
+top_img: /img/covers/articles/stm32-project-architecture.svg
 ---
 
 很多 MCU 项目一开始只是点灯、读传感器、发串口，代码都写在 `main.c` 里也能跑。但项目一旦加入通信协议、状态机、低功耗、Bootloader、异常恢复，混在一起的代码会很快失控。

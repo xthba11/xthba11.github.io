@@ -13,7 +13,8 @@ tags:
   - C++
   - CAN网关
 description: 使用 C++ 实现 RK3568 车载网关的 SocketCAN 接收模块，把 CAN 接收、线程安全队列、解析线程和 vcan0 到 vcan1 转发串成一个可验证闭环。
-top_img: /img/covers/linux-driver-cover.svg
+cover: /img/covers/articles/rk3568-socketcan-gateway-router.svg
+top_img: /img/covers/articles/rk3568-socketcan-gateway-router.svg
 ---
 
 上一篇文章完成了 `vcan0/vcan1` 环境验证。这一篇开始写车载网关的核心模块：SocketCAN 接收和双 CAN 通道转发。

@@ -8,7 +8,8 @@ tags:
   - Linux
   - 网络编程
 description: 这个博客的内容地图：STM32 项目、FreeRTOS、LVGL、传感器、Linux 驱动、C 网络编程和真实调试记录。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/hello-world.svg
+top_img: /img/covers/articles/hello-world.svg
 ---
 
 欢迎来到我的技术博客。这里会记录我在 STM32 固件、FreeRTOS、LVGL、传感器驱动、Linux 系统编程和 C 语言网络编程中的实践笔记。

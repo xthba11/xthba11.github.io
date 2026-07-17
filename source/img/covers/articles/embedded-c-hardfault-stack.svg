@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="嵌入式 C 第八篇：HardFault 和栈溢出定位">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#111827"/><stop offset="1" stop-color="#05070b"/></linearGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#7dd3fc" stroke-opacity="0.075" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1034" cy="92" r="198" fill="#7dd3fc" opacity="0.105"/>
+  <circle cx="128" cy="572" r="236" fill="#facc15" opacity="0.08"/>
+  <rect x="64" y="74" width="1072" height="482" rx="28" fill="#ffffff" opacity="0.042" stroke="#ffffff" stroke-opacity="0.14"/>
+  <text x="88" y="140" font-family="Inter, 'Noto Sans SC', Arial, sans-serif" font-size="27" font-weight="800" fill="#facc15" letter-spacing="1.5">Embedded C</text>
+  <text font-family="Inter, 'Noto Sans SC', Arial, sans-serif" font-size="38" font-weight="850" fill="#f8fafc" letter-spacing="0"><tspan x="88" y="230">嵌入式 C 第八篇：</tspan><tspan x="88" y="282">HardFault 和栈溢出定位</tspan></text>
+  <path d="M88 430 H470" stroke="#7dd3fc" stroke-width="8" stroke-linecap="round"/>
+  <text x="88" y="486" font-family="JetBrains Mono, Consolas, monospace" font-size="20" fill="#f8fafc" opacity="0.74">embedded-c-hardfault-stack</text>
+  <g transform="translate(800,174)"><path d="M178 36l144 248H34L178 36z" stroke="#7dd3fc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M178 112v82" stroke="#facc15" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="178" cy="232" r="8" fill="#facc15"/><path d="M56 316h244" stroke="#7dd3fc" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.45"/></g>
+  <path d="M790 474 C880 522 1002 520 1102 456" fill="none" stroke="#facc15" stroke-width="7" stroke-linecap="round" opacity="0.48"/>
+</svg>

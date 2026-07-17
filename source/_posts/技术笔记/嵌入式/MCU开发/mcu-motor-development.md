@@ -13,7 +13,8 @@ tags:
   - PWM
   - PID
 description: 电机开发详解：直流电机、BLDC、PMSM 的驱动与控制算法
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/mcu-motor-development.svg
+top_img: /img/covers/articles/mcu-motor-development.svg
 ---
 
 # MCU开发专题：电机开发从入门到实战

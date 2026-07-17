@@ -12,7 +12,8 @@ tags:
   - poll
   - C语言
 description: Linux 驱动中断和阻塞 IO 学习：request_irq、wait_event、poll/select 和用户态事件通知。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/linux-interrupt-poll-driver.svg
+top_img: /img/covers/articles/linux-interrupt-poll-driver.svg
 ---
 
 很多驱动都需要把硬件事件通知给用户态，例如按键按下、传感器数据 ready、DMA 完成、FPGA 中断触发。

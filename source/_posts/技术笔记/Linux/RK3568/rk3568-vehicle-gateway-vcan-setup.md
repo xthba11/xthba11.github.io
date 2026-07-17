@@ -13,7 +13,8 @@ tags:
   - vcan
   - can-utils
 description: 基于 RK3568 车载网关项目，搭建 Ubuntu PC 与 RK3568 板端的 vcan0/vcan1 测试环境，完成 CAN 报文收发、接口检查和基础问题定位。
-top_img: /img/covers/linux-driver-cover.svg
+cover: /img/covers/articles/rk3568-vehicle-gateway-vcan-setup.svg
+top_img: /img/covers/articles/rk3568-vehicle-gateway-vcan-setup.svg
 ---
 
 这篇文章是 RK3568 车载网关与轻量级车道偏离预警项目的第一篇实验记录。

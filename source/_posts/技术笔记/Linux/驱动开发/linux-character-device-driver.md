@@ -12,7 +12,8 @@ tags:
   - ioctl
   - 内核模块
 description: Linux 字符设备驱动的最小闭环：设备号、cdev、file_operations、read/write/ioctl 和用户态测试。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/linux-character-device-driver.svg
+top_img: /img/covers/articles/linux-character-device-driver.svg
 ---
 
 字符设备驱动是 Linux 驱动开发最适合入门的切入点。它能覆盖设备号、文件操作接口、内核态和用户态交互等核心概念。

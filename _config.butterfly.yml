@@ -304,3 +304,4 @@ inject:
   head:
     - <link rel="stylesheet" href="/css/embedded-lab.css">
   bottom:
+    - <script src="/js/post-shelf-manager.js"></script>

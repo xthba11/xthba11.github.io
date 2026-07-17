@@ -12,7 +12,8 @@ tags:
   - regmap
   - C语言
 description: I2C client 驱动学习：设备树描述、probe、寄存器读写、regmap 和传感器数据读取。
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/linux-i2c-client-driver.svg
+top_img: /img/covers/articles/linux-i2c-client-driver.svg
 ---
 
 I2C 是嵌入式 Linux 中最常见的低速外设总线之一。温湿度传感器、RTC、触摸芯片、电源管理芯片、EEPROM 都经常挂在 I2C 上。

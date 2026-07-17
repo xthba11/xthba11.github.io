@@ -14,7 +14,8 @@ tags:
   - HC-05
   - BLE5.0
 description: 蓝牙开发详解：HC-05 蓝牙模块、BLE 协议、透传与数据通信
-top_img: /img/embedded-lab-hero.png
+cover: /img/covers/articles/mcu-bluetooth-development.svg
+top_img: /img/covers/articles/mcu-bluetooth-development.svg
 ---
 
 # MCU开发专题：蓝牙开发从入门到实战
