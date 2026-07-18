@@ -215,7 +215,7 @@ timezone: Asia/Shanghai
 ### 6.3 社交链接
 
 - GitHub: https://github.com/xthba11
-- Email: 112301306@fzu.edu.cn
+- Email: 2751696022@qq.com
 
 ---
 
