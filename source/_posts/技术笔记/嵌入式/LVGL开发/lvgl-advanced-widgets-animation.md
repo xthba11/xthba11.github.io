@@ -1,6 +1,6 @@
 ---
 title: LVGL 高级控件与动画效果实战（Bicycle_Watch 自行车码表 UI）
-date: 2026-07-20
+date: 2025-12-15
 categories:
   - 技术笔记
   - 嵌入式

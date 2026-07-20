@@ -1,6 +1,6 @@
 ---
 title: RK3568 车载网关实验三：Python ECU 模拟器与 CAN 信号解析
-date: 2026-07-16 18:30:00
+date: 2025-06-16 18:30:00
 categories:
   - 技术笔记
   - Linux

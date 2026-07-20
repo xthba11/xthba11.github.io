@@ -1,6 +1,6 @@
 ---
 title: nRF52840 GATT 服务设计与骑行数据协议（HRS / CSC / 自定义服务）
-date: 2026-07-20
+date: 2025-08-10
 categories:
   - 技术笔记
   - 嵌入式

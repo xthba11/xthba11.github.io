@@ -1,6 +1,6 @@
 ---
 title: Linux 驱动开发：中断、等待队列与 poll/select
-date: 2026-05-12
+date: 2025-02-18
 categories:
   - 技术笔记
   - Linux

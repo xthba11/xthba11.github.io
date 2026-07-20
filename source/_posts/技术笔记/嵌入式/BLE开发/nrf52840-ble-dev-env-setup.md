@@ -1,6 +1,6 @@
 ---
 title: nRF52840 BLE 开发环境搭建与入门
-date: 2026-07-19
+date: 2025-07-18
 categories:
   - 技术笔记
   - 嵌入式

@@ -1,6 +1,6 @@
 ---
 title: EM7028 心率传感器与 BMP280 气压计驱动开发
-date: 2026-07-20
+date: 2025-12-30
 categories:
   - 项目实战
   - BSP开发

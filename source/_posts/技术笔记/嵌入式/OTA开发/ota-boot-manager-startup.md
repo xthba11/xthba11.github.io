@@ -1,6 +1,6 @@
 ---
 title: Boot Manager 启动管理与异常恢复（双区切换与断点续升）
-date: 2026-07-20
+date: 2025-10-26
 categories:
   - 技术笔记
   - 嵌入式

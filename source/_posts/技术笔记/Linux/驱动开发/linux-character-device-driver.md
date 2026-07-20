@@ -1,6 +1,6 @@
 ---
 title: Linux 字符设备驱动入门：从 open 到 ioctl
-date: 2026-05-01
+date: 2025-01-10
 categories:
   - 技术笔记
   - Linux

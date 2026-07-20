@@ -1,6 +1,6 @@
 ---
 title: 用 LittleFS 保存骑行记录：外部 Flash 文件系统在 STM32 码表中的应用
-date: 2026-07-16 11:10:00
+date: 2026-02-20 11:10:00
 categories:
   - 项目实战
   - RidePulse

@@ -1,6 +1,6 @@
 ---
 title: GuiGuider 代码生成与 LVGL 多页面 UI 设计
-date: 2026-07-20
+date: 2025-11-15
 categories:
   - 技术笔记
   - 嵌入式

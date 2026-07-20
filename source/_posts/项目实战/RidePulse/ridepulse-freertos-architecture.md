@@ -1,6 +1,6 @@
 ---
 title: STM32 码表的 FreeRTOS 任务划分：显示、传感器、存储、OTA 与看门狗
-date: 2026-07-16 10:40:00
+date: 2026-01-20 10:40:00
 categories:
   - 项目实战
   - RidePulse

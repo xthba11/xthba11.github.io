@@ -1,6 +1,6 @@
 ---
 title: RidePulse 自行车码表项目总览：从智能手表固件到骑行终端
-date: 2026-07-16 10:30:00
+date: 2026-01-10 10:30:00
 categories:
   - 项目实战
   - RidePulse

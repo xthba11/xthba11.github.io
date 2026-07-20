@@ -1,6 +1,6 @@
 ---
 title: Linux 驱动开发：I2C Client 驱动框架
-date: 2026-05-10
+date: 2025-03-02
 categories:
   - 技术笔记
   - Linux

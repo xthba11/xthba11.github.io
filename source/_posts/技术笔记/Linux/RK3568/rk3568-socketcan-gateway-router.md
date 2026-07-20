@@ -1,6 +1,6 @@
 ---
 title: RK3568 车载网关实验二：SocketCAN 接收、队列与双 CAN 转发
-date: 2026-07-16 18:20:00
+date: 2025-06-06 18:20:00
 categories:
   - 技术笔记
   - Linux

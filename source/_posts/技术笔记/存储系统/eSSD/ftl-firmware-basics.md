@@ -1,6 +1,6 @@
 ---
 title: FTL 固件学习笔记：L2P 映射、GC 与写放大
-date: 2026-05-04
+date: 2024-09-28
 categories:
   - 技术笔记
   - 存储系统

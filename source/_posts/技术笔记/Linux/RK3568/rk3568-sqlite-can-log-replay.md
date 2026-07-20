@@ -1,6 +1,6 @@
 ---
 title: RK3568 车载网关实验五：SQLite 数据记录与 CAN 报文回放
-date: 2026-07-16 18:50:00
+date: 2025-06-26 18:50:00
 categories:
   - 技术笔记
   - Linux

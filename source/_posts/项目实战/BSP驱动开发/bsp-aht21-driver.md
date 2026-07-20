@@ -1,6 +1,6 @@
 ---
 title: AHT21 温湿度传感器 I2C 驱动开发（Bicycle_Watch 实战）
-date: 2026-07-20
+date: 2025-12-26
 categories:
   - 项目实战
   - BSP开发

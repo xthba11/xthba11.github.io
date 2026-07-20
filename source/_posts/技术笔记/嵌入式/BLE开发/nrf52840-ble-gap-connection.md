@@ -1,6 +1,6 @@
 ---
 title: nRF52840 BLE 广播、连接与安全管理（GAP 层深度解析）
-date: 2026-07-19
+date: 2025-07-30
 categories:
   - 技术笔记
   - 嵌入式

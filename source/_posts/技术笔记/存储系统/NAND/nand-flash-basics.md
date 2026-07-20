@@ -1,6 +1,6 @@
 ---
 title: NAND Flash 学习笔记：Page、Block、坏块与 ECC
-date: 2026-05-05
+date: 2024-09-15
 categories:
   - 技术笔记
   - 存储系统

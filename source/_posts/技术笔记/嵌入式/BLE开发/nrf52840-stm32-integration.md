@@ -1,6 +1,6 @@
 ---
 title: nRF52840 + STM32 主从架构设计与 Bicycle_Watch 集成实战
-date: 2026-07-20
+date: 2025-09-02
 categories:
   - 技术笔记
   - 嵌入式

@@ -1,6 +1,6 @@
 ---
 title: LVGL 移植与 Bicycle_Watch 分层架构设计
-date: 2026-07-20
+date: 2025-11-05
 categories:
   - 技术笔记
   - 嵌入式

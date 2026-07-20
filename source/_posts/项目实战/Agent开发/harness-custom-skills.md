@@ -1,6 +1,6 @@
 ---
 title: 自定义 Skill 斜杠命令开发实战 —— 打造团队专属工具链
-date: 2026-07-20
+date: 2026-05-15
 categories:
   - 项目实战
   - Agent开发

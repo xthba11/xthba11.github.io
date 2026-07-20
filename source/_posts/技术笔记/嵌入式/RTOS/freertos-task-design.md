@@ -1,6 +1,6 @@
 ---
 title: FreeRTOS 任务设计：优先级、队列与事件组怎么选
-date: 2026-04-30
+date: 2026-03-01
 categories:
   - 技术笔记
   - 嵌入式

@@ -1,6 +1,6 @@
 ---
 title: STM32 内部 Flash 编程与 HAL 库操作（OTA 固件写入）
-date: 2026-07-20
+date: 2025-10-16
 categories:
   - 技术笔记
   - 嵌入式

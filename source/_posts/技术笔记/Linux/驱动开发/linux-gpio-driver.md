@@ -1,6 +1,6 @@
 ---
 title: Linux 驱动开发：GPIO 子系统与 LED/按键驱动
-date: 2026-05-09
+date: 2025-02-05
 categories:
   - 技术笔记
   - Linux

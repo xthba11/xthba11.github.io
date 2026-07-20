@@ -1,6 +1,6 @@
 ---
 title: nRF52840 BLE Mesh 组网与骑行定位方案
-date: 2026-07-20
+date: 2025-08-22
 categories:
   - 技术笔记
   - 嵌入式

@@ -1,6 +1,6 @@
 ---
 title: MPU6050 六轴传感器 I2C 驱动开发（DMA + FIFO + 中断）
-date: 2026-07-20
+date: 2025-12-28
 categories:
   - 项目实战
   - BSP开发

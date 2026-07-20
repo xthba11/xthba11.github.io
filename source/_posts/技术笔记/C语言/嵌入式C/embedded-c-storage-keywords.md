@@ -1,6 +1,6 @@
 ---
 title: 嵌入式 C 第二篇：volatile、const、static、extern 的真实用法
-date: 2026-07-17 10:20:00
+date: 2024-03-20 10:20:00
 categories:
   - 技术笔记
   - C语言

@@ -1,6 +1,6 @@
 ---
 title: 外部 Flash 策略与 W25Q64 数据缓冲（OTA 暂存区设计）
-date: 2026-07-20
+date: 2025-10-06
 categories:
   - 技术笔记
   - 嵌入式

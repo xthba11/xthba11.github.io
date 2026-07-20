@@ -1,6 +1,6 @@
 ---
 title: OTA 固件升级系统架构与双区备份设计（Bicycle_Watch 实战）
-date: 2026-07-20
+date: 2025-09-14
 categories:
   - 技术笔记
   - 嵌入式

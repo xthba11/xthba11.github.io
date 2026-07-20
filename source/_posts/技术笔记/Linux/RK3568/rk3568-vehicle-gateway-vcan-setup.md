@@ -1,6 +1,6 @@
 ---
 title: RK3568 车载网关实验一：vcan 环境与 can-utils 验证
-date: 2026-07-16 18:10:00
+date: 2025-05-26 18:10:00
 categories:
   - 技术笔记
   - Linux

@@ -1,6 +1,6 @@
 ---
 title: Hook 自动化管道搭建实战 —— 打造 Git 提交→格式化→CI→通知全自动链路
-date: 2026-07-20
+date: 2026-06-05
 categories:
   - 项目实战
   - Agent开发

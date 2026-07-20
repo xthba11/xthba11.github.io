@@ -26,7 +26,7 @@ RidePulse 是一个基于 STM32F411、FreeRTOS 和 LVGL 的自行车码表项目
 ### 代码结构
 
 ```text
-ec_s100_watch_V2.2_T2469/
+Bicycle_Watch/
   01_APP/                       应用层、用户初始化、LVGL UI、显示任务
   02_BSP_Platform/              板级驱动、传感器适配、显示/触摸/Flash 封装
   02_Middleware_Platform/       LittleFS 移植

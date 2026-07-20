@@ -1,6 +1,6 @@
 ---
 title: Linux 驱动开发：SPI 设备驱动与同步传输
-date: 2026-05-11
+date: 2025-03-14
 categories:
   - 技术笔记
   - Linux

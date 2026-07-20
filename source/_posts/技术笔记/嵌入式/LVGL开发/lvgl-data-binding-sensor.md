@@ -1,6 +1,6 @@
 ---
 title: LVGL 数据绑定与 Sensor 实时刷新机制
-date: 2026-07-20
+date: 2025-12-05
 categories:
   - 技术笔记
   - 嵌入式

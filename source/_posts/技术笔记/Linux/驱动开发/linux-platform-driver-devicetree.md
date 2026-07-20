@@ -1,6 +1,6 @@
 ---
 title: Linux 驱动开发：platform driver 与设备树入门
-date: 2026-05-08
+date: 2025-01-22
 categories:
   - 技术笔记
   - Linux

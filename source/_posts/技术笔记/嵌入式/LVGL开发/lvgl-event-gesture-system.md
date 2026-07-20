@@ -1,6 +1,6 @@
 ---
 title: LVGL 事件系统与手势交互设计（基于 Bicycle_Watch 实战）
-date: 2026-07-20
+date: 2025-11-25
 categories:
   - 技术笔记
   - 嵌入式
