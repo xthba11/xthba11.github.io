@@ -21,7 +21,12 @@
       "WebFetch(domain:minimax-algeng-chat-tts.oss-cn-wulanchabu.aliyuncs.com)",
       "Bash(git commit *)",
       "Bash(python3 -c ' *)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(find \"C:/Users/XTHBA/Desktop/找工作/项目/Bicycle_Watch\" -maxdepth 3 -type f | head -80)",
+      "Read(//c/Users/XTHBA/Desktop/找工作/项目/Bicycle_Watch/**)",
+      "Bash(find \"C:/Users/XTHBA/Desktop/找工作/项目/Bicycle_Watch\" -type f \\\\\\( -name \"*.c\" -o -name \"*.h\" -o -name \"*.md\" \\\\\\) ! -path \"*/.git/*\" | sort)",
+      "Bash(find \"C:/Users/XTHBA/Desktop/找工作/项目/Bicycle_Watch\" -type f \\\\\\( -name \"*BLE*\" -o -name \"*ble*\" -o -name \"*bluetooth*\" -o -name \"*Bluetooth*\" -o -name \"*nrf*\" -o -name \"*softdevice*\" -o -name \"*mesh*\" -o -name \"*beacon*\" -o -name \"*gatt*\" -o -name \"*GATT*\" \\\\\\) ! -path \"*/.git/*\")",
+      "Bash(find \"C:/Users/XTHBA/Desktop/找工作/项目/Bicycle_Watch\" -maxdepth 3 -type f -name \"README.md\" ! -path \"*/.git/*\")"
     ]
   }
 }
