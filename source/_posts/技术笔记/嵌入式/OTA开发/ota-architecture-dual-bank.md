@@ -15,8 +15,8 @@ tags:
   - W25Q64
   - Bicycle_Watch
 description: Bicycle_Watch OTA 系统架构全景：四阶段状态机（WaitReqDownload → OtaDownload → WaitReqUpdate → OtaEnd）、双区备份（AreaA/AreaB）策略、Flash 内存布局、App Info 标志管理、多任务协作模型
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/ota-architecture-dual-bank.svg
+top_img: /img/covers/articles/ota-architecture-dual-bank.svg
 ---
 
 # OTA 固件升级系统架构与双区备份设计

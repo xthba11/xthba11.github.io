@@ -13,8 +13,8 @@ tags:
   - 审计
   - 自动化
 description: Harness Hook 机制深度解析：PreToolUse/PostToolUse/Notification 三类 Hook 的生命周期、matcher 匹配语法（精确/通配符/正则）、Hook 脚本的环境变量注入、返回值控制（allowDeny/上下文修改）、实战场景（自动格式化、安全拦截、日志审计、通知集成）
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-hooks-middleware.svg
+top_img: /img/covers/articles/harness-hooks-middleware.svg
 ---
 
 # Harness Hook 机制与中间件设计

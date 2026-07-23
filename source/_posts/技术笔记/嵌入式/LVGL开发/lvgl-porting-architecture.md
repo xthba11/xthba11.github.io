@@ -14,8 +14,8 @@ tags:
   - LittleFS
   - Bicycle_Watch
 description: LVGL 在 STM32F411 上的移植实践：分层架构设计、显示驱动适配（SPI+DMA）、触摸校准与 LittleFS 持久化、FreeRTOS 任务模型、看门狗集成
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/lvgl-porting-architecture.svg
+top_img: /img/covers/articles/lvgl-porting-architecture.svg
 ---
 
 # LVGL 移植与 Bicycle_Watch 分层架构设计

@@ -14,8 +14,8 @@ tags:
   - BLE
   - Nordic
 description: nRF52840 与 STM32F411 主从架构设计：UART 通信协议（AT指令 + 二进制帧）、Bicycle_Watch 项目集成实践、双 MCU 任务划分、ID 命令系统设计、透传通道与异常恢复
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/nrf52840-stm32-integration.svg
+top_img: /img/covers/articles/nrf52840-stm32-integration.svg
 ---
 
 # nRF52840 + STM32 主从架构设计与 Bicycle_Watch 集成实战

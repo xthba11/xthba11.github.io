@@ -13,8 +13,8 @@ tags:
   - 代码审查
   - 自动化
 description: Harness 实战第三篇：从零编写 Workflow JS 编排脚本，构建一个完整的代码审查流水线。实现并行四维度审查、对抗验证过滤假阳性、结构化报告生成，以及 token 预算自适应调度的实用模式
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-workflow-orchestration.svg
+top_img: /img/covers/articles/harness-workflow-orchestration.svg
 ---
 
 # Workflow 多代理编排实战

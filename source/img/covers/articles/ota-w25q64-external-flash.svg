@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="外部 Flash 策略与 W25Q64 数据缓冲（OTA 暂存区设计）">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1024"/><stop offset="1" stop-color="#09060d"/></linearGradient>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse"><path d="M44 0H0V44" fill="none" stroke="#fb7185" stroke-opacity="0.075" stroke-width="1"/></pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <circle cx="1034" cy="92" r="198" fill="#fb7185" opacity="0.105"/>
+  <circle cx="128" cy="572" r="236" fill="#fbbf24" opacity="0.08"/>
+  <rect x="64" y="74" width="1072" height="482" rx="28" fill="#ffffff" opacity="0.042" stroke="#ffffff" stroke-opacity="0.14"/>
+  <text x="88" y="140" font-family="Inter, 'Noto Sans SC', Arial, sans-serif" font-size="27" font-weight="800" fill="#fbbf24" letter-spacing="1.5">OTA</text>
+  <text font-family="Inter, 'Noto Sans SC', Arial, sans-serif" font-size="38" font-weight="850" fill="#fff7fb" letter-spacing="0"><tspan x="88" y="230">外部 Flash 策略与 W25Q64 数据缓冲</tspan><tspan x="88" y="282">（OTA 暂存区设计）</tspan></text>
+  <path d="M88 430 H470" stroke="#fb7185" stroke-width="8" stroke-linecap="round"/>
+  <text x="88" y="486" font-family="JetBrains Mono, Consolas, monospace" font-size="20" fill="#fff7fb" opacity="0.74">ota-w25q64-external-flash</text>
+  <g transform="translate(780,176)"><path d="M84 78h230v150H84z" fill="none" stroke="#fbbf24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M124 78v-28M174 78v-28M224 78v-28M274 78v-28M124 228v28M174 228v28M224 228v28M274 228v28" stroke="#fb7185" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M128 134h142M128 174h94" stroke="#fbbf24" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></g>
+  <path d="M790 474 C880 522 1002 520 1102 456" fill="none" stroke="#fbbf24" stroke-width="7" stroke-linecap="round" opacity="0.48"/>
+</svg>

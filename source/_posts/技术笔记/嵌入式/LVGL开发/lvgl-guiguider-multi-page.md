@@ -14,8 +14,8 @@ tags:
   - STM32
   - Bicycle_Watch
 description: 使用 NXP GuiGuider 拖拽生成 LVGL UI 代码的实践：项目结构、setup_scr 模式、ui_load_scr_animation 页面切换动画、代码生成后的自定义修改策略、自定义字体与图片资源管理
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/lvgl-guiguider-multi-page.svg
+top_img: /img/covers/articles/lvgl-guiguider-multi-page.svg
 ---
 
 # GuiGuider 代码生成与 LVGL 多页面 UI 设计

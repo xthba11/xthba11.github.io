@@ -14,8 +14,8 @@ tags:
   - 滚动联动
   - Bicycle_Watch
 description: LVGL 高级控件深度实践：模拟时钟（lv_analogclock）、弧形进度条面板、滚动联动菜单、lv_anim 动画系统（路径回弹、淡入淡出、属性过渡）、自定义字体与图片资源管理
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/lvgl-advanced-widgets-animation.svg
+top_img: /img/covers/articles/lvgl-advanced-widgets-animation.svg
 ---
 
 # LVGL 高级控件与动画效果实战

@@ -13,8 +13,8 @@ tags:
   - PostToolUse
   - settings.json
 description: Harness 实战第四篇：搭建完整自动化管道——Write后自动代码格式化、git commit自动触发CI、危险命令拦截审计、Slack/钉钉通知集成。从零配置 6 个实用 Hook 脚本
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-hooks-automation.svg
+top_img: /img/covers/articles/harness-hooks-automation.svg
 ---
 
 # Hook 自动化管道搭建实战

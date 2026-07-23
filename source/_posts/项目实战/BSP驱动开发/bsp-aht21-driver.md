@@ -13,8 +13,8 @@ tags:
   - 驱动开发
   - Bicycle_Watch
 description: AHT21 温湿度传感器 I2C 驱动完整开发：I2C 读写时序（软件模拟 GPIO）、测量命令序列（0xAC+0x33+0x00）、80ms 等待+状态轮询、6 字节数据读取拼装、温湿度计算公式推导、CRC-8 校验实现
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/bsp-aht21-driver.svg
+top_img: /img/covers/articles/bsp-aht21-driver.svg
 ---
 
 # AHT21 温湿度传感器 I2C 驱动开发

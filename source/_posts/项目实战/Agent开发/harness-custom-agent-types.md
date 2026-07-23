@@ -11,8 +11,8 @@ tags:
   - 自定义代理
   - .claude/agents
 description: Harness 实战第一篇：从零创建自定义 Agent 类型。通过 4 个完整案例（代码审查员/测试专家/文档生成器/API设计审查员）演示 Frontmatter 配置、工具白名单、模型选择、隔离模式，以及 Agent 类型的最佳实践与测试方法
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-custom-agent-types.svg
+top_img: /img/covers/articles/harness-custom-agent-types.svg
 ---
 
 # 自定义 Agent 类型开发实战

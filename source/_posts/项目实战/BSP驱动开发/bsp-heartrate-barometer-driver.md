@@ -14,8 +14,8 @@ tags:
   - I2C
   - Bicycle_Watch
 description: EM7028 心率传感器与 BMP280 气压计驱动开发：PPG 光电容积脉搏波采样与滤波、心率 BPM 计算（峰值检测+滑动窗口）、BMP280 气压/温度寄存器读取、海拔换算公式（基于海平面气压）、骑行场景应用
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/bsp-heartrate-barometer-driver.svg
+top_img: /img/covers/articles/bsp-heartrate-barometer-driver.svg
 ---
 
 # EM7028 心率传感器与 BMP280 气压计驱动开发

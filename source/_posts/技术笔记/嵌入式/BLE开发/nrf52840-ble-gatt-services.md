@@ -14,8 +14,8 @@ tags:
   - 自定义服务
   - Nordic
 description: 深入 GATT 服务设计：基于 nRF52840 实现心率服务 HRS、骑行速度踏频服务 CSC、自定义骑行数据服务；讲解 characteristic 属性、Notification/Indication 机制、CCCD 描述符及 Bicycle_Watch 传感器到 BLE 的数据链路
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/nrf52840-ble-gatt-services.svg
+top_img: /img/covers/articles/nrf52840-ble-gatt-services.svg
 ---
 
 # nRF52840 GATT 服务设计与骑行数据协议

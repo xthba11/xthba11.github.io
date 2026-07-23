@@ -13,8 +13,8 @@ tags:
   - Node.js
   - 嵌入式工具
 description: Harness 实战第五篇：从零开发一个嵌入式开发专用 MCP Server。实现芯片寄存器查询、固件二进制解析、数据手册搜索 3 个自定义工具，讲解 MCP 协议（tools/list + tools/call）、Server 注册与调试、与内置工具的统一调用
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-mcp-server-dev.svg
+top_img: /img/covers/articles/harness-mcp-server-dev.svg
 ---
 
 # MCP Server 开发与集成实战

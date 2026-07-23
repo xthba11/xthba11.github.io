@@ -13,8 +13,8 @@ tags:
   - 工作流
   - Claude Code
 description: Harness Agent 子代理系统深度解析：Agent 类型注册与定义（general-purpose/explore/plan/code-review）、主代理与子代理的通信机制、parallel 与 pipeline 的并行调度模型、并发池管理、StructuredOutput 结构化输出约束
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-agent-subagent-system.svg
+top_img: /img/covers/articles/harness-agent-subagent-system.svg
 ---
 
 # Harness Agent 子代理系统与并行调度

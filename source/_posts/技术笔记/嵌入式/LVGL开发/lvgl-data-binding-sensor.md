@@ -14,8 +14,8 @@ tags:
   - 队列
   - Bicycle_Watch
 description: LVGL 与 Sensor 任务的数据交互架构：全局数据结构 lvgl_data_t、队列驱动的 UI 事件传递、页面切换时动态订阅传感器、lv_timer 定时刷新、线程安全设计原则
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/lvgl-data-binding-sensor.svg
+top_img: /img/covers/articles/lvgl-data-binding-sensor.svg
 ---
 
 # LVGL 数据绑定与 Sensor 实时刷新机制

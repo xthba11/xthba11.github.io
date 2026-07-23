@@ -13,8 +13,8 @@ tags:
   - 蓝牙
   - Nordic
 description: 从零搭建 nRF52840 BLE 开发环境：nRF Connect SDK 安装、工程模板创建、SoftDevice 烧录与第一个 Beacon 广播程序
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/nrf52840-ble-dev-env-setup.svg
+top_img: /img/covers/articles/nrf52840-ble-dev-env-setup.svg
 ---
 
 # nRF52840 BLE 开发环境搭建与入门

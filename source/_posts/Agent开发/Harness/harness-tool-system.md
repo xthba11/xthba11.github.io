@@ -13,8 +13,8 @@ tags:
   - 沙箱
   - 权限
 description: Harness 工具系统深入：Tool 的 JSON Schema 定义规范、工具调用生命周期（Parse → Validate → Authorize → Execute → Return）、内置工具分类、MCP 工具集成、沙箱隔离机制、超时与重试策略
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-tool-system.svg
+top_img: /img/covers/articles/harness-tool-system.svg
 ---
 
 # Harness 工具系统与 Tool 定义

@@ -12,8 +12,8 @@ tags:
   - .claude/skills
   - 自动化
 description: Harness 实战第二篇：从零创建三个自定义 Skill——/auto-changelog（自动生成 CHANGELOG）、/dep-update（依赖更新检查）、/gen-test（一键生成测试）。详解 Skill Markdown 文件规范、参数传递、Skill 与 Agent 类型协作
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-custom-skills.svg
+top_img: /img/covers/articles/harness-custom-skills.svg
 ---
 
 # 自定义 Skill 斜杠命令开发实战

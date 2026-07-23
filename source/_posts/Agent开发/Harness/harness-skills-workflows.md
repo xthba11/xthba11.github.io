@@ -13,8 +13,8 @@ tags:
   - 自动化
   - Claude Code
 description: Harness Skills 与 Workflow 系统详解：Skill 文件的定义规范与触发机制、Slash Command 的完整流程、Workflow JS 脚本编写（agent/parallel/pipeline/phase/budget）、实际编排案例（代码审查流水线、多维度并行审计、循环发现模式）
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-skills-workflows.svg
+top_img: /img/covers/articles/harness-skills-workflows.svg
 ---
 
 # Harness Skills 系统与 Workflow 编排

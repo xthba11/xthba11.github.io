@@ -13,8 +13,8 @@ tags:
   - Sector擦写
   - Bicycle_Watch
 description: STM32F411 内部 Flash 编程实战：Flash Sector 结构、HAL_FLASH_Unlock/Erase/Program/Lock 操作序列、字对齐写入与尾部填充、App Info 标志区编程、临界区保护、从 W25Q64 到内部 Flash 的固件搬运流程
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/ota-internal-flash-hal.svg
+top_img: /img/covers/articles/ota-internal-flash-hal.svg
 ---
 
 # STM32 内部 Flash 编程与 HAL 库操作

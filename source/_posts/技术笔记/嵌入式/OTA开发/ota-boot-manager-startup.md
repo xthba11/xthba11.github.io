@@ -14,8 +14,8 @@ tags:
   - 断点续升
   - Bicycle_Watch
 description: Boot Manager 启动管理深度实践：上电启动流程与状态决策、App Info 标志位驱动双区切换、Flash-to-Flash 固件搬运、向量表重定位（SCB->VTOR）、断电保护和回退恢复、验收测试
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/ota-boot-manager-startup.svg
+top_img: /img/covers/articles/ota-boot-manager-startup.svg
 ---
 
 # Boot Manager 启动管理与异常恢复

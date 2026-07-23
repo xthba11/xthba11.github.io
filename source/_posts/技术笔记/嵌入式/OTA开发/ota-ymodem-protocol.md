@@ -13,8 +13,8 @@ tags:
   - STM32
   - Bicycle_Watch
 description: Ymodem 文件传输协议深度解析：数据包格式（SOH/STX/EOT/ACK/NAK）、握手流程、CRC16 校验、超时重传机制、Bicycle_Watch 中的双缓冲接收实现（DMA+IDLE）、文件大小传递与进度回调
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/ota-ymodem-protocol.svg
+top_img: /img/covers/articles/ota-ymodem-protocol.svg
 ---
 
 # Ymodem 协议解析与 Bicycle_Watch 实现

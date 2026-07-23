@@ -11,8 +11,8 @@ tags:
   - 架构设计
   - Claude Code
 description: Harness 框架全景：AI Agent 运行时引擎的定位、核心架构（模型适配层/工具运行层/权限控制层/Agent管理层）、消息路由流程、上下文与记忆管理、settings.json 配置体系
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/harness-architecture-overview.svg
+top_img: /img/covers/articles/harness-architecture-overview.svg
 ---
 
 # Harness 框架概述与架构设计

@@ -14,8 +14,8 @@ tags:
   - LittleFS
   - Bicycle_Watch
 description: W25Q64 外部 Flash 在 OTA 系统中的实践：8MB 四分区设计（OTA/FlashDB/FATFS/LVGL）、4096 字节扇区缓冲策略、多任务互斥锁保护、事件组同步机制、SPI 写入性能优化
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/ota-w25q64-external-flash.svg
+top_img: /img/covers/articles/ota-w25q64-external-flash.svg
 ---
 
 # 外部 Flash 策略与 W25Q64 数据缓冲

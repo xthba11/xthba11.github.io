@@ -14,8 +14,8 @@ tags:
   - 步数算法
   - Bicycle_Watch
 description: MPU6050 六轴传感器驱动深度开发：硬件 I2C + DMA 加速读取、FIFO 批量获取（1024 字节）、量程与低通滤波器配置、中断引脚 INT 数据就绪通知、Kalman 姿态解算、步数统计算法（峰值检测）
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/bsp-mpu6050-driver.svg
+top_img: /img/covers/articles/bsp-mpu6050-driver.svg
 ---
 
 # MPU6050 六轴传感器 I2C 驱动开发

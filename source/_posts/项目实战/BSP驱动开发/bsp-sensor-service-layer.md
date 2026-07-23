@@ -13,8 +13,8 @@ tags:
   - 低功耗
   - Bicycle_Watch
 description: Sensor Service 传感器服务层架构：统一的 sensor_polling_task 调度框架、采样频率矩阵（温湿度 10s/IMU 10ms/心率 1s/气压 5s）、按 LVGL 页面动态启停传感器（省电）、数据分发到 LVGL 显示层与 BLE 推送
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/bsp-sensor-service-layer.svg
+top_img: /img/covers/articles/bsp-sensor-service-layer.svg
 ---
 
 # Sensor Service 传感器服务层与多传感器调度

@@ -14,8 +14,8 @@ tags:
   - 安全管理
   - Nordic
 description: nRF52840 BLE GAP 层深度解析：广播类型与参数调优、连接建立与参数协商、多角色并发（同时做 Central 和 Peripheral）、配对绑定与 LES 安全配对
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/nrf52840-ble-gap-connection.svg
+top_img: /img/covers/articles/nrf52840-ble-gap-connection.svg
 ---
 
 # nRF52840 BLE 广播、连接与安全管理

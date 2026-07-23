@@ -13,8 +13,8 @@ tags:
   - 接口抽象
   - Bicycle_Watch
 description: Bicycle_Watch BSP 驱动架构全景：三层分离设计（Driver/Handler/Adapter）、面向接口的函数指针抽象、I2C/SPI 通信接口统一、OS 适配层（临界区/延迟/信号量）、驱动实例化（inst）模式
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/bsp-architecture-design.svg
+top_img: /img/covers/articles/bsp-architecture-design.svg
 ---
 
 # BSP 驱动分层架构与接口抽象设计

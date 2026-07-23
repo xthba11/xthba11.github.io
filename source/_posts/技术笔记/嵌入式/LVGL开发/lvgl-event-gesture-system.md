@@ -13,8 +13,8 @@ tags:
   - 定时器
   - Bicycle_Watch
 description: LVGL 事件系统深度实践：事件处理器模式（switch 分发）、四方向手势交互、长按与短按、屏幕生命周期管理（LOADED/UNLOAD）、定时器驱动的数据刷新、滑动菜单与象限判断
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/lvgl-event-gesture-system.svg
+top_img: /img/covers/articles/lvgl-event-gesture-system.svg
 ---
 
 # LVGL 事件系统与手势交互设计

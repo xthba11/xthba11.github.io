@@ -13,8 +13,8 @@ tags:
   - Nordic
   - 骑行定位
 description: nRF52840 BLE Mesh 深度实践：Node 类型（Relay/Friend/Low Power）、消息模型（Client/Server）、骑行队伍组网架构、电子围栏方案；结合 RSSI 多点定位和 BLE Direction Finding 实现骑行场景中的位置感知
-cover: /img/covers/articles/mcu-bluetooth-development.svg
-top_img: /img/covers/articles/mcu-bluetooth-development.svg
+cover: /img/covers/articles/nrf52840-ble-mesh-positioning.svg
+top_img: /img/covers/articles/nrf52840-ble-mesh-positioning.svg
 ---
 
 # nRF52840 BLE Mesh 组网与骑行定位方案
